@@ -5,7 +5,7 @@ COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 # パッケージのインストールとキャッシュ削除
 RUN apt-get update && \
-    apt-get install -y zip unzip git rsync && \
+    apt-get install -y zip unzip git rsync libpq-dev && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-install pdo_mysql pdo_pgsql pgsql
 # 依存関係ファイルのみコピーしてキャッシュを効かせる

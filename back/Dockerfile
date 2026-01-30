@@ -20,6 +20,7 @@ set -e\n\
 [ ! -d /back/vendor ] || [ -z "$(ls -A /back/vendor 2>/dev/null)" ] && \
 cp -r /opt/vendor /back/vendor || \
 rsync -au --quiet /opt/vendor/ /back/vendor/\n\
+php artisan migrate --force\n\
 exec "$@"\n' > /docker-entrypoint.sh && \
     chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]

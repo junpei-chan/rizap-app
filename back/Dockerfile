@@ -7,7 +7,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN apt-get update && \
     apt-get install -y zip unzip git rsync && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-install pdo_mysql
+    docker-php-ext-install pdo_mysql pdo_pgsql pgsql
 # 依存関係ファイルのみコピーしてキャッシュを効かせる
 COPY composer.json composer.lock ./
 RUN composer install --no-scripts

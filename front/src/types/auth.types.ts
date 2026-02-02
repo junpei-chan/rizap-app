@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const authRequestSchema = z.object({
-  email: z.string("有効なメールアドレスを入力してください"),
+  email: z.email("有効なメールアドレスを入力してください"),
   password: z.string().min(8, "パスワードは8文字以上で入力してください"),
 });
 

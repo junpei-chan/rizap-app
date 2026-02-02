@@ -16,3 +16,15 @@ export const useCreateMealFrequency = () => {
     },
   });
 };
+
+export const useUpdateMealFrequency = () => {
+  return useMutation({
+    mutationFn: (params: MealFrequencyRequest) => mealFrequencyService.updateMealFrequency(params),
+    onSuccess: () => {
+      console.log("食事頻度の更新に成功しました");
+    },
+    onError: (error: ApiError) => {
+      console.error("食事頻度の更新に失敗しました: ", error.message);
+    },
+  });
+};

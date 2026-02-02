@@ -1,5 +1,5 @@
 import { publicClient } from "@/lib/axios";
-import type { MealFrequencyRequest } from "@/types/user.types";
+import type { MealFrequencyRequest } from "@/types/meal-frequency.types";
 import type { ApiResponse } from "@/types/api.types";
 
 export const userService = {

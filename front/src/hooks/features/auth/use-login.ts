@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/services/auth/auth-service";
 import type { AuthRequest, AuthResponse, AuthError } from "@/types/auth.types";
 import Cookies from "js-cookie";
-import { useAuthStore } from "@/stores/auth-store";
+import { useAuthStore } from "@/stores";
 import { useRouter } from "next/navigation";
 
 export const useLogin = () => {
@@ -21,7 +21,7 @@ export const useLogin = () => {
       router.push("/"); // トップページにリダイレクト
     },
     onError: (error: AuthError) => {
-      console.error("ログインに失敗しました: ", error.message);
+      console.error("ログインに失敗しました: ", error.message); // エラー処理
     }
   });
 };

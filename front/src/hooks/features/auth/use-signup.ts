@@ -14,9 +14,14 @@ export const useSignup = () => {
   return useMutation({
     mutationFn: (credentials: AuthRequest) => authService.signup(credentials),
     onSuccess: (data: AuthResponse) => {
-      Cookies.set("authToken", data.authToken); // トークンをCookieにセット
+      // if (!data.user) {
+      //   console.error("ユーザー情報が取得できませんでした");
+      //   return;
+      // }
 
-      setAuth(data.user, data.authToken); // Zustandストア更新
+      Cookies.set("authToken", data.token); // トークンをCookieにセット
+
+      setAuth(data.token); // Zustandストア更新
 
       router.push("/"); // トップページにリダイレクト
     },

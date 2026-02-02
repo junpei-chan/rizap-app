@@ -14,10 +14,10 @@ export interface User {
 }
 
 export interface AuthResponse {
-  authToken: string;
+  token: string;
   success: boolean;
   message: string;
-  user: User;
+  user?: User;
 }
 
 export interface AuthError {

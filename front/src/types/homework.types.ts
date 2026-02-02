@@ -7,4 +7,13 @@ export const roomRequestSchema = z.array( // 配列形式
   })
 );
 
+export const homeworkRequestSchema = z.object({
+  homeworkId: z.string().max(1),
+});
+
 export type RoomRequest = z.infer<typeof roomRequestSchema>;
+export type HomeworkRequest = z.infer<typeof homeworkRequestSchema>;
+
+export interface HomeworkResponse {
+  doneAt: string;
+}

@@ -5,7 +5,7 @@ export const authRequestSchema = z.object({
   password: z.string().min(8, "パスワードは8文字以上で入力してください"),
 });
 
-export type authRequest = z.infer<typeof authRequestSchema>;
+export type AuthRequest = z.infer<typeof authRequestSchema>;
 
 export interface User {
   id: string;

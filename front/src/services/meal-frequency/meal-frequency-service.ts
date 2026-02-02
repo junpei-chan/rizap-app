@@ -4,15 +4,15 @@ import type { ApiResponse } from "@/types/api.types";
 
 export const mealFrequencyService = {
   createMealFrequency: async (params?: MealFrequencyRequest) => {
-    const { data } = await publicClient.post<ApiResponse>("/profile/meal_frequency", {
+    const { data } = await publicClient.post<ApiResponse>("/profile/meal_frequency", 
       params,
-    });
+    );
     return data;
   },
   updateMealFrequency: async (params?: MealFrequencyRequest) => {
-    const { data } = await authClient.patch<ApiResponse>("/profile/meal_frequency/edit", {
+    const { data } = await authClient.patch<ApiResponse>("/profile/meal_frequency/edit",
       params,
-    });
+    );
     return data;
   },
 }

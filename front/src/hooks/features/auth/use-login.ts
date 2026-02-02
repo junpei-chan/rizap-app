@@ -21,7 +21,7 @@ export const useLogin = () => {
       router.push("/"); // トップページにリダイレクト
     },
     onError: (error: AuthError) => {
-      throw error; // エラーをthrow
+      console.error("ログインに失敗しました: ", error.message);
     }
   });
 };

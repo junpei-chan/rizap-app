@@ -29,7 +29,7 @@ authClient.interceptors.response.use(
   (response) => response,
 
   async (error) => {
-    if (error.response?.staus === 401) {
+    if (error.response?.status === 401) {
       // TODO: ログアウト処理
       window.location.href = "/login"; // ログインページへリダイレクト
     }

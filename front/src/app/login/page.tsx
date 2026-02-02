@@ -54,7 +54,7 @@ export default function Login() {
           className="bg-blue-500 text-white"
           onClick={handleSubmit}
         >
-          登録
+          ログイン
         </button>
       </form>
 

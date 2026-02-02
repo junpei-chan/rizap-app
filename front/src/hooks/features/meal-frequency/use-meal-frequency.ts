@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation } from "@tanstack/react-query";
 import { mealFrequencyService } from "@/services/meal-frequency/meal-frequency-service";
 import type { MealFrequencyRequest } from "@/types/meal-frequency.types";

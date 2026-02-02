@@ -7,4 +7,4 @@ export const roomRequestSchema = z.array( // 配列形式
   })
 );
 
-export type RoomRequestRequest = z.infer<typeof roomRequestSchema>;
+export type RoomRequest = z.infer<typeof roomRequestSchema>;

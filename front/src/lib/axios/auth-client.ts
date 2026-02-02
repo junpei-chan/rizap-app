@@ -1,6 +1,7 @@
 import axios from "axios";
+import { useAuthStore } from "@/stores";
 
-const authClient = axios.create({
+export const authClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     "Content-Type": "application/json",
@@ -10,9 +11,7 @@ const authClient = axios.create({
 
 authClient.interceptors.request.use(
   (config) => {
-    const userToken = "token"; 
-    // TODO: Zustandストアからトークンを取得
-    // 仮で文字列を代入
+    const userToken = useAuthStore.getState().authToken;
 
     if (userToken && config.headers) {
       config.headers["Authorization"] = `Bearer ${userToken}`;
@@ -30,11 +29,9 @@ authClient.interceptors.response.use(
 
   async (error) => {
     if (error.response?.status === 401) {
-      // TODO: ログアウト処理
+      useAuthStore.getState().clearAuth(); // ログアウト処理
       window.location.href = "/login"; // ログインページへリダイレクト
     }
     return Promise.reject(error);
   }
 )
-
-export default authClient;

@@ -10,13 +10,14 @@ export type AuthRequest = z.infer<typeof authRequestSchema>;
 export interface User {
   id: string;
   email: string;
-  password: string;
-  meaLfrequency: number;
+  mealFrequency: number;
 }
 
 export interface AuthResponse {
+  authToken: string;
   success: boolean;
   message: string;
+  user?: User;
 }
 
 export interface AuthError {

@@ -5,6 +5,7 @@ use App\Models\User; // Userモデルを使用
 use Illuminate\Support\Facades\Hash; // ハッシュパスワードのチェックに使用
 use Illuminate\Support\Facades\Auth; // ログイン処理
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException; // バリデーション例外
 
 class AuthController extends Controller
 {
@@ -41,7 +42,7 @@ class AuthController extends Controller
         try {
             $validated = $request->validate([
                 'email' => 'required|email|max:255|unique:users,email',//required -> 入力必須　：　email -> メール型か : max:255 -> 255文字以内 : unique:users,email -> 同じ名前はだめ
-                'password' => 'required|string|min:7' //confirmed -> パスワード再入力と値が同じかどうか
+                'password' => 'required|string|min:8' //confirmed -> パスワード再入力と値が同じかどうか
             ]);
 
             $user = User::create([

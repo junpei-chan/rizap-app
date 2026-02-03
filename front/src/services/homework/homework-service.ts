@@ -1,5 +1,5 @@
 import { publicClient, authClient } from "@/lib/axios";
-import { RoomRequest, HomeworkRequest, HomeworkResponse } from "@/types/homework.types";
+import { RoomRequest, HomeworkRequest, HomeworkResponse, HomeworkStartRequest } from "@/types/homework.types";
 import type { ApiResponse } from "@/types/api.types";
 
 export const HomeworkService = {
@@ -11,8 +11,14 @@ export const HomeworkService = {
   },
   getHomework: async (params?: HomeworkRequest) => {
     const { data } = await authClient.get<HomeworkResponse>("/homework", {
-      params
+      params,
     });
     return data;
   },
-}
+  startHomework: async (homework: HomeworkStartRequest) => {
+    const { data } = await authClient.patch<ApiResponse>("/homework/start",
+      homework,
+    );
+    return data;
+  },
+};

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { HomeworkService } from "@/services/homework/homework-service";
-import { HomeworkRequest } from "@/types/homework.types";
+import { HomeworkRequest, HomeworkStartRequest } from "@/types/homework.types";
 import { ApiError } from "@/types/api.types";
 
 export const useGetHomework = () => {
@@ -11,6 +11,18 @@ export const useGetHomework = () => {
     },
     onError: (error: ApiError) => {
       console.error("家事情報の取得に失敗しました :", error.message);
+    },
+  });
+};
+
+export const useStartHomework = () => {
+  return useMutation({
+    mutationFn: (homework: HomeworkStartRequest) => HomeworkService.startHomework(homework),
+    onSuccess: () => {
+      console.log("家事の開始に成功しました");
+    },
+    onError: (error: ApiError) => {
+      console.error("家事の開始に失敗しました :", error.message);
     },
   });
 };

@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('meal_frequency/edit', [ProfileController::class, 'edit']);
     });
 
-    Route::patch('/room', [RoomController::class, 'store']);
+    Route::post('/room', [RoomController::class, 'store']);
 
     Route::prefix('homework')->group(function () {
         Route::get('/', [HomeworkController::class, 'index']);

@@ -29,7 +29,7 @@ export const useStartHomework = () => {
 
 export const useEndHomework = () => {
   return useMutation ({
-    mutationFn: (params: HomeworkRequest) => HomeworkService.getHomework(params),
+    mutationFn: (params: HomeworkRequest) => HomeworkService.endHomework(params),
     onSuccess: () => {
       console.log("家事の終了に成功しました");
     },

@@ -16,7 +16,7 @@ Route::prefix('auth')->group(function () {
     Route::post('sign_up', [AuthController::class, 'sign_up']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::post('meal_frequency', [ProfileController::class, 'store']);
         Route::patch('meal_frequency/edit', [ProfileController::class, 'edit']);
@@ -29,4 +29,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('start', [HomeworkController::class, 'store']);
         Route::patch('end', [HomeworkController::class, 'update']);
     });
-});
+// });

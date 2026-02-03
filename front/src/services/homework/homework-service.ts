@@ -21,4 +21,10 @@ export const HomeworkService = {
     );
     return data;
   },
+  endHomework: async (params: HomeworkRequest) => {
+    const { data } = await authClient.patch<ApiResponse>("/homework/end",
+      params,
+    );
+    return data;
+  },
 };

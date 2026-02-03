@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
         $user = User::create([
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
-            'meal_frequency' => 2
+            'meal_frequency' => 2,
         ]);
 
         // =====================
-        // 家事マスタ（固定8個）
+        // 家事マスタ
         // =====================
         $houseworks = collect([
             '洗い物',
@@ -32,36 +32,37 @@ class DatabaseSeeder extends Seeder
             '風呂掃除',
             'トイレ掃除',
             'その他',
-        ])->map(fn($name) => Housework::create(['name' => $name]));
-
-        // 取り出しやすく
-        $dishwashing = $houseworks[0];
-        $laundry     = $houseworks[1];
-        $trash       = $houseworks[2];
+        ])->map(fn ($name) =>
+            Housework::create(['name' => $name])
+        );
 
         // =====================
-        // 家事ログ（状態テスト）
+        // 家事ログ
         // =====================
 
-        // 完了済み
+        // 完了済み（今日）
         HouseworkLog::create([
             'user_id' => $user->id,
-            'housework_id' => $dishwashing->id,
+            'housework_id' => $houseworks[0]->id,
             'done_at' => now()->subMinutes(10),
+            'calorie' => 80,
         ]);
 
-        // 起動中
+        // 起動中（done_at = null）
         HouseworkLog::create([
             'user_id' => $user->id,
-            'housework_id' => $laundry->id,
+            'housework_id' => $houseworks[1]->id,
             'done_at' => null,
+            'calorie' => 0,
         ]);
 
         // 昨日完了
         HouseworkLog::create([
             'user_id' => $user->id,
-            'housework_id' => $trash->id,
+            'housework_id' => $houseworks[2]->id,
             'done_at' => now()->subDay(),
+            'calorie' => 120,
         ]);
     }
 }
+

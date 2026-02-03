@@ -24,7 +24,7 @@ Route::prefix('auth')->group(function () {
 
     Route::patch('/room', [RoomController::class, 'store']);
 
-    Route::prefix('homework')->group(function () {
+    Route::prefix('housework')->group(function () {
         Route::get('/', [HomeworkController::class, 'index']);
         Route::patch('start', [HomeworkController::class, 'store']);
         Route::patch('end', [HomeworkController::class, 'update']);

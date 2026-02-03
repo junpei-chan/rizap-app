@@ -7,49 +7,107 @@ use App\Models\HouseworkLog;
 
 class HomeworkController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $request->validate([
-            'homework_id' => 'nullable|exists:houseworks,id',
-        ]);
-        // $user_id = auth()->id(); //ログインしたら、下のコード一行を消し、こちらをオンにする
-        //そしてapi.phpのミドルウェアを解除する
-        $user_id = 1;
-
-        $homework_id = $request->input('homework_id');
-        if($homework_id){
-            $log = \DB::table('housework_logs')
-                ->where('user_id', $user_id)
-                ->where('housework_id', $homework_id)
-                ->orderBy('updated_at', 'desc')
-                ->first();
-
-            return response()->json([
-                'homework_id' => $homework_id,
-                'done_at' => $log?->done_at,
-            ]);
-        }
-
-        $last_done_list = \DB::table('housework_logs')
-            ->where('user_id', $user_id)
-            ->orderBy('updated_at', 'desc')
-            ->get()
-            ->unique('housework_id')
-            ->values();
-
-        return response()->json([
-            'data' => $last_done_list
-        ]);
-    }
-
-    public function store(Request $request){
-        $request->validate([
-            'housework_id' => 'required|integer|exists:houseworks,id',
+            'housework_id' => 'nullable|exists:houseworks,id',
         ]);
 
         //$user_id = auth()->id(); 本来はこれ
         $user_id = 1;
 
-        // すでに起動中のログがあるかチェック（多重起動防止）
+        $housework_id = $request->input('housework_id');
+        // ==============================
+        // 🔹 家事が1つ指定された場合
+        // ==============================
+        if ($housework_id) {
+
+            // ① 起動中ログを探す（最優先）
+            $runningLog = \DB::table('housework_logs')
+                ->where('user_id', $user_id)
+                ->where('housework_id', $housework_id)
+                ->whereNull('done_at')
+                ->latest('created_at')
+                ->first();
+
+            if ($runningLog) {
+                return response()->json([
+                    'housework_id' => $housework_id,
+                    'status' => 'running',
+                    'done_at' => null,
+                ]);
+            }
+
+            // ② 完了ログの最新
+            $lastDone = \DB::table('housework_logs')
+                ->where('user_id', $user_id)
+                ->where('housework_id', $housework_id)
+                ->whereNotNull('done_at')
+                ->latest('done_at')
+                ->first();
+
+            return response()->json([
+                'housework_id' => $housework_id,
+                'status' => 'stopped',
+                'done_at' => $lastDone?->done_at,
+            ]);
+        }
+
+        // ==============================
+        // 🔹 全家事の現在状態を返す場合
+        // ==============================
+        $houseworks = \DB::table('houseworks')->get();
+
+        $result = $houseworks->map(function ($housework) use ($user_id) {
+
+            // 起動中ログ確認
+            $runningLog = \DB::table('housework_logs')
+                ->where('user_id', $user_id)
+                ->where('housework_id', $housework->id)
+                ->whereNull('done_at')
+                ->latest('created_at')
+                ->first();
+
+            if ($runningLog) {
+                return [
+                    'housework_id' => $housework->id,
+                    'name' => $housework->name,
+                    'status' => 'running',
+                    'done_at' => null,
+                ];
+            }
+
+            // 完了ログ最新
+            $lastDone = \DB::table('housework_logs')
+                ->where('user_id', $user_id)
+                ->where('housework_id', $housework->id)
+                ->whereNotNull('done_at')
+                ->latest('done_at')
+                ->first();
+
+            return [
+                'housework_id' => $housework->id,
+                'name' => $housework->name,
+                'status' => 'stopped',
+                'done_at' => $lastDone?->done_at,
+            ];
+        });
+
+        return response()->json([
+            'data' => $result
+        ]);
+    }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'housework_id' => 'required|integer|exists:houseworks,id',
+        ]);
+
+        $user_id = 1; // 本番は auth()->id()
+
+        // 🔍 その家事がすでに起動中か？
         $alreadyRunning = HouseworkLog::where('user_id', $user_id)
             ->where('housework_id', $request->housework_id)
             ->whereNull('done_at')
@@ -61,19 +119,52 @@ class HomeworkController extends Controller
             ], 409);
         }
 
-        // 起動ログ作成
-        HouseworkLog::create([
+        // ▶ 起動ログ作成（セッション開始）
+        $log = HouseworkLog::create([
             'user_id' => $user_id,
             'housework_id' => $request->housework_id,
-            'done_at' => null, // ← 起動中状態
+            'done_at' => null,
         ]);
 
         return response()->json([
-            'message' => 'homework started'
+            'message' => 'housework started',
+            'log_id' => $log->id,
+            'started_at' => $log->created_at,
         ], 201);
     }
 
-    public function update(){
-        
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'housework_id' => 'required|integer|exists:houseworks,id',
+        ]);
+
+        $user_id = 1; // 本番は auth()->id()
+
+        // 🔍 起動中ログ取得
+        $log = HouseworkLog::where('user_id', $user_id)
+            ->where('housework_id', $request->housework_id)
+            ->whereNull('done_at')
+            ->latest('created_at')
+            ->first();
+
+        if (!$log) {
+            return response()->json([
+                'message' => 'not running'
+            ], 404);
+        }
+
+        // ⏹ セッション終了
+        $log->update([
+            'done_at' => now(),
+        ]);
+
+        return response()->json([
+            'message' => 'housework stopped',
+            'started_at' => $log->created_at,
+            'finished_at' => $log->done_at,
+            'duration_minutes' => $log->created_at->diffInMinutes($log->done_at),
+        ]);
     }
 }

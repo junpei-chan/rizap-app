@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HouseworkLog extends Model
 {
     protected $fillable = [
         'user_id',
         'housework_id',
-        'done_at'
+        'done_at',
+        'calorie'
     ];
 
     public function user(): BelongsTo

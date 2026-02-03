@@ -105,6 +105,7 @@ class HomeworkController extends Controller
             'housework_id' => 'required|integer|exists:houseworks,id',
         ]);
 
+        //$user_id = auth()->id(); 本来はこれ
         $user_id = 1; // 本番は auth()->id()
 
         // 🔍 その家事がすでに起動中か？
@@ -138,9 +139,11 @@ class HomeworkController extends Controller
     {
         $request->validate([
             'housework_id' => 'required|integer|exists:houseworks,id',
+            'calorie' => 'required|integer'
         ]);
 
-        $user_id = 1; // 本番は auth()->id()
+        //$user_id = auth()->id(); 本来はこれ
+        $user_id = 1;
 
         // 🔍 起動中ログ取得
         $log = HouseworkLog::where('user_id', $user_id)
@@ -155,9 +158,10 @@ class HomeworkController extends Controller
             ], 404);
         }
 
-        // ⏹ セッション終了
+        // ⏹ セッション終了 + calorie保存
         $log->update([
             'done_at' => now(),
+            'calorie' => $request->calorie,
         ]);
 
         return response()->json([
@@ -165,6 +169,7 @@ class HomeworkController extends Controller
             'started_at' => $log->created_at,
             'finished_at' => $log->done_at,
             'duration_minutes' => $log->created_at->diffInMinutes($log->done_at),
+            'calorie' => $log->calorie,
         ]);
     }
 }

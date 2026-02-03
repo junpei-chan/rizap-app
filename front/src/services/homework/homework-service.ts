@@ -16,7 +16,7 @@ export const HomeworkService = {
     return data;
   },
   startHomework: async (homework: HomeworkStartRequest) => {
-    const { data } = await authClient.patch<HomeworkResponse>("/homework/start",
+    const { data } = await authClient.patch<ApiResponse>("/homework/start",
       homework,
     );
     return data;

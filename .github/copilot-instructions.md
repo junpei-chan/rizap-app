@@ -299,37 +299,6 @@ export type User = z.infer<typeof userSchema>;
 
 ## 認証実装 (独自実装)
 
-### Middleware での認証チェック
-
-```typescript
-// middleware.ts (将来的な認証実装のため、現在はコメントアウト)
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-
-export function middleware(request: NextRequest) {
-  // 将来的に認証機能を実装する際に使用
-  // const token = request.cookies.get('auth-token')?.value;
-  // const isAuthPage = request.nextUrl.pathname.startsWith('/login');
-  // const isProtectedPage = request.nextUrl.pathname.startsWith('/dashboard');
-
-  // 未認証で保護されたページにアクセス
-  // if (!token && isProtectedPage) {
-  //   return NextResponse.redirect(new URL('/login', request.url));
-  // }
-
-  // 認証済みでログインページにアクセス
-  // if (token && isAuthPage) {
-  //   return NextResponse.redirect(new URL('/dashboard', request.url));
-  // }
-
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
-};
-```
-
 ### ログイン処理の例
 
 ```typescript

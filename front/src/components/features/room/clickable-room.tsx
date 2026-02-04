@@ -4,6 +4,9 @@ import { useMemo } from "react";
 import Image from "next/image";
 import { ROOM_ITEMS } from "@/data/room-items";
 import { motion } from "framer-motion";
+import { useAllHouseworks } from "@/hooks/features/housework/use-all-houseworks";
+import { getHouseworkStatusById } from "@/lib/utils/get-housework-status";
+import type { HouseworkStatus } from "@/types/housework-base.types";
 
 interface ClickableRoomProps {
   onItemClick: (houseworkId: string) => void;
@@ -11,10 +14,27 @@ interface ClickableRoomProps {
 }
 
 /**
+ * 家事の状態が「かなり溜まっている」以上かどうかを判定
+ */
+const isHighPriorityStatus = (status: HouseworkStatus): boolean => {
+  const highPriorityStatuses = [
+    "かなり溜まっている",
+    "限界です",
+    "汚れている",
+    "いっぱい",
+    "たまっている",
+  ];
+  return highPriorityStatuses.includes(status);
+};
+
+/**
  * クリック可能な部屋コンポーネント
  * 画像上の各アイテムにクリック領域を配置し、選択された家事の詳細を表示
  */
 export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
+  // 全ての家事の状態を取得
+  const { houseworksMap } = useAllHouseworks();
+
   // 選択されたアイテムを見つける
   const selectedItem = useMemo(() => {
     if (!selectedId) return null;
@@ -72,22 +92,59 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
         priority
       />
 
-      {/* クリック可能な領域 */}
-      {ROOM_ITEMS.map((item) => (
-        <motion.button
-          key={item.id}
-          className="absolute cursor-pointer z-60"
-          style={{
-            top: item.position.top,
-            left: item.position.left,
-            width: item.position.width,
-            height: item.position.height,
-            backgroundColor: "transparent",
-          }}
-          onClick={() => onItemClick(item.houseworkId)}
-          aria-label={`${item.name}を選択`}
-        />
-      ))}
+      {/* クリック可能な領域とステータスインジケーター */}
+      {ROOM_ITEMS.map((item) => {
+        const houseworkData = houseworksMap[item.houseworkId];
+        const shouldShowIndicator = houseworkData && (() => {
+          const status = getHouseworkStatusById(houseworkData.doneAt, item.houseworkId);
+          return isHighPriorityStatus(status);
+        })();
+
+        return (
+          <div key={item.id}>
+            {/* クリック可能な領域 */}
+            <motion.button
+              className="absolute cursor-pointer z-60"
+              style={{
+                top: item.position.top,
+                left: item.position.left,
+                width: item.position.width,
+                height: item.position.height,
+                backgroundColor: "transparent",
+              }}
+              onClick={() => onItemClick(item.houseworkId)}
+              aria-label={`${item.name}を選択`}
+            />
+
+            {/* ステータスインジケーター画像 */}
+            {shouldShowIndicator && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute z-50 pointer-events-none"
+                style={{
+                  top: item.position.top,
+                  left: item.position.left,
+                  width: item.position.width,
+                  height: item.position.height,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Image 
+                  src="/images/alert-left.svg"
+                  alt=""
+                  width={52}
+                  height={52}
+                />
+              </motion.div>
+            )}
+          </div>
+        );
+      })}
     </motion.div>
   );
 }

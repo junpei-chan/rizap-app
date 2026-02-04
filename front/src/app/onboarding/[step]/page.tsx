@@ -1,7 +1,8 @@
     "use client";
 
     import { useUserStore } from "@/stores/user-store";
-    import { useMemo, useState } from "react";
+    import { useCreateMealFrequency } from "@/hooks/features/meal-frequency";
+    import { useEffect, useMemo, useState } from "react";
     import { useParams, useRouter } from "next/navigation";
     import { ChevronLeft } from "lucide-react";
 
@@ -28,6 +29,7 @@
 
     export default function OnboardingStepPage() {
     const { setMealFrequency } = useUserStore();
+    const { mutate } = useCreateMealFrequency();
 
     const router = useRouter();
     const params = useParams<{ step: string }>();
@@ -77,9 +79,15 @@
         router.push(`/onboarding/${stepIndex + 2}`);
     };
 
-    if (isFirst && selected !== null) {
-        setMealFrequency(selected);
-    }
+    useEffect(() => {
+        if (isFirst && selected !== null) {
+            mutate({
+                mealFrequency: selected,
+            });
+
+            setMealFrequency(selected);
+        }
+    }, [isFirst, selected, setMealFrequency]);
 
     return (
         // 下から54px固定：pb-[54px]

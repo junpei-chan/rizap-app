@@ -1,10 +1,10 @@
-import { publicClient, authClient } from "@/lib/axios";
+import { authClient } from "@/lib/axios";
 import type { MealFrequencyRequest } from "@/types/meal-frequency.types";
 import type { ApiResponse } from "@/types/api.types";
 
 export const mealFrequencyService = {
   createMealFrequency: async (params?: MealFrequencyRequest) => {
-    const { data } = await publicClient.post<ApiResponse>("/profile/meal_frequency", 
+    const { data } = await authClient.post<ApiResponse>("/profile/meal_frequency", 
       params,
     );
     return data;

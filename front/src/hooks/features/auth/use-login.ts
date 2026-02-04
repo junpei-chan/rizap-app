@@ -14,11 +14,6 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (credentials: AuthRequest) => authService.login(credentials),
     onSuccess: (data: AuthResponse) => {
-      // if (!data.user) {
-      //   console.error("ユーザー情報が取得できませんでした");
-      //   return;
-      // }
-
       Cookies.set("authToken", data.token); // トークンをCookieにセット
 
       setAuth(data.token); // Zustandストア更新

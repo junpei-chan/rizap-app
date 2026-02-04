@@ -1,10 +1,10 @@
-import { publicClient, authClient } from "@/lib/axios";
+import { authClient } from "@/lib/axios";
 import { RoomRequest, HomeworkRequest, HomeworkResponse, HomeworkStartRequest } from "@/types/homework.types";
 import type { ApiResponse } from "@/types/api.types";
 
 export const HomeworkService = {
   setupRoom: async (params?: RoomRequest) => {
-    const { data } = await publicClient.post<ApiResponse>("/room",
+    const { data } = await authClient.post<ApiResponse>("/room",
       params,
     );
     return data;

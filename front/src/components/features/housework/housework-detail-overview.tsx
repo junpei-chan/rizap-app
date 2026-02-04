@@ -1,4 +1,4 @@
-import { Play, X, ChevronLeft, Sparkles } from "lucide-react";
+import { ChevronLeft, Sparkles } from "lucide-react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items";
 import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
 import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
@@ -47,7 +47,7 @@ export function HouseworkDetailOverview({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className={`
-        fixed top-0 right-0 w-screen h-screen bg-linear-to-b from-white via-white/80 to-white/0
+        fixed top-0 right-0 w-screen h-screen bg-linear-to-b from-white via-white/80 to-white/0 z-10
         ${IbmPlexSansJpFont.className}
       `}
     >

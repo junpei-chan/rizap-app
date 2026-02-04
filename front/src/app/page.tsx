@@ -3,11 +3,11 @@
 import { useState, useMemo } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button, Calendar } from "@/components/ui";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { CalendarSheet } from "@/components/features/calendar";
 import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
 import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
-import { calculateTimeDifference, getHouseworkStatusById, getHouseworkDatesFromCalendar, formatDateToYMD } from "@/lib/utils/";
+import { calculateTimeDifference, getHouseworkStatusById, getHouseworkDatesFromCalendar, formatDateToYMD, formatDateToYMDHMS } from "@/lib/utils/";
 import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
@@ -15,6 +15,7 @@ import { useHouseworkStore } from "@/stores/housework-store";
 export default function App() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { mutate: startHousework } = useStartHousework();
   const { mutate: endHousework } = useEndHousework();
   const { isHouseworkRunning } = useHouseworkStore();
@@ -37,6 +38,7 @@ export default function App() {
     setDate(newDate);
     if (newDate) {
       setSelectedDateString(formatDateToYMD(newDate));
+      setIsSheetOpen(true);
     }
   };
 
@@ -61,7 +63,7 @@ export default function App() {
     });
   };
 
-  console.log(calenderDate);
+
 
   return (
     <main>
@@ -137,19 +139,18 @@ export default function App() {
         />
       </div>
 
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button>開く</Button>
-        </SheetTrigger>
-        <SheetContent side="bottom">
-          <SheetHeader>
-            <SheetTitle>タイトル</SheetTitle>
-            <SheetDescription>
-              説明文をここに記述します。
-            </SheetDescription>
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
+      {calenderDate?.date && (
+        <CalendarSheet 
+          date={calenderDate.date}
+          totalCalorie={calenderDate.totalCalorie}
+          logs={calenderDate.logs.map((log) => ({
+            ...log,
+            doneAt: formatDateToYMDHMS(new Date(log.doneAt))
+          }))}
+          isOpen={isSheetOpen}
+          onOpenChange={setIsSheetOpen}
+        />
+      )}
     </main>
   )
 }

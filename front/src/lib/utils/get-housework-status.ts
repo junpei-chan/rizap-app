@@ -1,12 +1,12 @@
 // Created by Github Copilot!!
 
-import {
+import type {
   HouseworkStatus,
   HouseworkStatusNormal,
   HouseworkStatusLaundry,
   HouseworkStatusTrash,
   HouseworkStatusOrganize,
-} from "@/types/housework.types";
+} from "@/types/housework-base.types";
 
 /**
  * 最後に作業した日から経過した日数を計算

@@ -13,6 +13,11 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "verbatimModuleSyntax": false,
+    "importsNotUsedAsValues": "remove",
+    "assumeChangesOnlyAffectDirectDependencies": true,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "disableSolutionSearching": true,
     "plugins": [
       {
         "name": "next"
@@ -24,12 +29,20 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
     "**/*.mts"
-
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "../back",
+    "../docs",
+    "../.github",
+    "../.git",
+    ".next",
+    "out",
+    "dist",
+    "build"
+  ]
 }

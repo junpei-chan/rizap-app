@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { HouseworkService } from "@/services/housework/housework-service";
-import type { RoomRequest } from "@/types/housework.types";
+import type { RoomRequest } from "@/types/housework-base.types";
 import type { ApiError } from "@/types/api.types";
 
 export const useSetupRoom = () => {

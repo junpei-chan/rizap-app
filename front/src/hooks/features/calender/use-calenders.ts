@@ -1,35 +1,48 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { calenderService } from "@/services/calender/calender-service";
-import { CalenderRequest, CalenderDateRequest, CalenderResponse, CalenderDateResponse } from "@/types/calender.types";
-import { ApiError } from "@/types/api.types";
-import { useCalenderStore } from "@/stores/calender-store";
+import { CalenderRequest, CalenderDateRequest } from "@/types/calender.types";
+import { useEffect } from "react";
 
-export const useGetCalender = () => {
-  const { setCalenderData } = useCalenderStore();
-
-  return useMutation({
-    mutationFn: (params: CalenderRequest) => calenderService.getCalender(params),
-    onSuccess: (data: CalenderResponse) => {
-      setCalenderData(data); // Zustandストア更新
-      console.log("カレンダーの取得に成功しました");
-    },
-    onError: (error: ApiError) => {
-      console.error("カレンダーの取得に失敗しました :", error.message);
-    },
+export const useGetCalender = (params: CalenderRequest) => {
+  const { data, isSuccess, isError, error } = useQuery({
+    queryKey: ["calender", params],
+    queryFn: () => calenderService.getCalender(params),
+    enabled: !!params,
   });
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      console.log("カレンダーデータの取得に成功しました");
+    }
+  }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (isError && error) {
+      console.error("カレンダーデータの取得に失敗しました :", error.message);
+    }
+  }, [isError, error]);
+
+  return { data, isSuccess, isError, error };
 };
 
-export const useGetCalenderDate = () => {
-  const { setSelectedDate } = useCalenderStore();
-
-  return useMutation({
-    mutationFn: (params: CalenderDateRequest) => calenderService.getCalenderDate(params),
-    onSuccess: (data: CalenderDateResponse) => {
-      setSelectedDate(data); // Zustandストア更新
-      console.log("日付ごとのカレンダーデータの取得に成功しました");
-    },
-    onError: (error: ApiError) => {
-      console.error("日付ごとのカレンダーデータの取得に失敗しました :", error.message);
-    },
+export const useGetCalenderDate = (params: CalenderDateRequest) => {
+  const { data, isSuccess, isError, error } = useQuery({
+    queryKey: ["calenderDate", params],
+    queryFn: () => calenderService.getCalenderDate(params),
+    enabled: !!params.date && params.date.length > 0,
   });
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      console.log("日付ごとのカレンダーデータ取得に成功しました");
+    }
+  }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (isError && error) {
+      console.error("日付ごとのカレンダーデータ取得に失敗しました :", error.message);
+    }
+  }, [isError, error]);
+
+  return { data, isSuccess, isError, error };
 };

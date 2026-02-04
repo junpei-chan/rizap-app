@@ -1,23 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
-import { Button } from "@/components/ui";
+import { Button, Calendar } from "@/components/ui";
+import { CalendarSheet } from "@/components/features/calendar";
 import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
-import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
+import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
+import { calculateTimeDifference, getHouseworkStatusById, getHouseworkDatesFromCalendar, formatDateToYMD, formatDateToYMDHMS } from "@/lib/utils/";
 import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
 
 export default function App() {
+  const [date, setDate] = useState<Date | undefined>(new Date())
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { data: housework, isLoading, error } = useGetHousework(
-    selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
-  );
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { mutate: startHousework } = useStartHousework();
   const { mutate: endHousework } = useEndHousework();
   const { isHouseworkRunning } = useHouseworkStore();
+
+  const [selectedDateString, setSelectedDateString] = useState<string>(
+    formatDateToYMD(new Date())
+  );
+  const { data: housework } = useGetHousework(
+    selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
+  );
+  const { data: calenderData } = useGetCalender({
+    year: date?.getFullYear() ?? new Date().getFullYear(),
+    month: (date?.getMonth() ?? new Date().getMonth()) + 1,
+  });
+  const { data: calenderDate } = useGetCalenderDate({
+    date: selectedDateString,
+  });
+
+  const handleDateSelect = (newDate: Date | undefined) => {
+    setDate(newDate);
+    if (newDate) {
+      setSelectedDateString(formatDateToYMD(newDate));
+      setIsSheetOpen(true);
+    }
+  };
+
+  const houseworkDates = useMemo(
+    () => getHouseworkDatesFromCalendar(calenderData),
+    [calenderData]
+  );
 
   const handleHouseworkStart = (id: number) => {
     startHousework({
@@ -35,6 +63,8 @@ export default function App() {
     });
   };
 
+
+
   return (
     <main>
       <div className="flex flex-col gap-4">
@@ -51,8 +81,6 @@ export default function App() {
 
       {selectedId && (
         <div className="mt-4">
-          {isLoading && <p>読み込み中...</p>}
-          {error && <p>エラーが発生しました</p>}
           {housework && (() => {
             const label = calculateTimeDifference(housework.doneAt); // 最後に作業した日
             const status = getHouseworkStatusById(housework.doneAt, housework.houseworkId); // 現在の状態
@@ -99,6 +127,29 @@ export default function App() {
             );
           })()}
         </div>
+      )}
+
+      <div>
+        <h2>Total Calorie: {calenderData?.totalCalorie}</h2>
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={handleDateSelect}
+          houseworkDates={houseworkDates}
+        />
+      </div>
+
+      {calenderDate?.date && (
+        <CalendarSheet 
+          date={calenderDate.date}
+          totalCalorie={calenderDate.totalCalorie}
+          logs={calenderDate.logs.map((log) => ({
+            ...log,
+            doneAt: formatDateToYMDHMS(new Date(log.doneAt))
+          }))}
+          isOpen={isSheetOpen}
+          onOpenChange={setIsSheetOpen}
+        />
       )}
     </main>
   )

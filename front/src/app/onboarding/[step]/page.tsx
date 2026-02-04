@@ -106,7 +106,9 @@ export default function OnboardingStepPage() {
     }
 
     const handleAnswersSubmit = (roomData: { houseworkId: number; doneAt: string }[]) => {
-        setupRoom(roomData);
+        roomData.forEach((data) => {
+            setupRoom(data);
+        });
     }
 
     useEffect(() => {

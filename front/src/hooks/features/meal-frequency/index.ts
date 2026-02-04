@@ -1,1 +1,1 @@
-export * from "./use-meal-frequency";
+export { useCreateMealFrequency, useUpdateMealFrequency } from "./use-meal-frequency";

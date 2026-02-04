@@ -1,1 +1,1 @@
-export * from "./housework-status-badge";
+export { HouseworkStatusBadge } from "./housework-status-badge";

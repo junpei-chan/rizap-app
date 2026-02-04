@@ -4,7 +4,7 @@
 
 import { getHouseworkStatus, getHouseworkStatusById } from "@/lib/utils/";
 import { ThumbsUp, Smile, Frown, ThumbsDown, TriangleAlert, CircleQuestionMark } from "lucide-react";
-import type { HouseworkStatus } from "@/types/housework.types";
+import type { HouseworkStatus } from "@/types/housework-base.types";
 import { cn } from "@/lib/utils";
 
 interface HouseworkStatusBadgeProps {

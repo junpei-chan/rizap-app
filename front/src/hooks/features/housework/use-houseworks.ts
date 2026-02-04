@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { HouseworkService } from "@/services/housework/housework-service";
-import { HouseworkRequest, HouseworkStartRequest } from "@/types/housework.types";
+import type { HouseworkRequest, HouseworkStartRequest } from "@/types/housework-base.types";
 import { ApiError } from "@/types/api.types";
 import { useHouseworkStore } from "@/stores/housework-store";
 

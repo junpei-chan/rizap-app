@@ -1,3 +1,3 @@
-export * from "./auth-store";
-export * from "./user-store";
-export * from "./calender-store";
+export { useAuthStore } from "./auth-store";
+export { useUserStore } from "./user-store";
+export { useCalenderStore } from "./calender-store";

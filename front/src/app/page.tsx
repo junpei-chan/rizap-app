@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button } from "@/components/ui";
-import { Play } from "lucide-react";
+import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework } from "@/hooks/features/housework";
 import { calculateTimeDifference } from "@/lib/utils/";
 import { HouseworkStatusBadge } from "@/components/features/housework";
@@ -53,13 +53,17 @@ export default function App() {
                   className="border"
                   onClick={() => handleHouseworkStart(Number(housework.houseworkId))}
                 >
-                  {isHouseworkRunning() && (
+                  {!isHouseworkRunning() ? (
                     <>
                       <Play />
                       作業開始
                     </>
+                  ) : (
+                    <>
+                      <X />
+                      作業終了
+                    </>
                   )}
-                  
                 </Button>
                 <div>
                   <h3>最後に作業した日</h3>

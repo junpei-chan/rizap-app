@@ -27,7 +27,7 @@ export type HouseworkStatusNormal =
   | "綺麗"
   | "少し汚れている"
   | "汚れている"
-  | "限界";
+  | "限界です";
 
 // 家事の状態（洗濯）
 export type HouseworkStatusLaundry = 
@@ -35,7 +35,7 @@ export type HouseworkStatusLaundry =
   | "少し溜まっている"
   | "溜まっている"
   | "かなり溜まっている"
-  | "限界";
+  | "限界です";
 
 // 家事の状態（ゴミ）
 export type HouseworkStatusTrash = 
@@ -43,7 +43,7 @@ export type HouseworkStatusTrash =
   | "少し入っている"
   | "半分くらい"
   | "いっぱい"
-  | "限界";
+  | "限界です";
 
 // 家事の状態（整理整頓）
 export type HouseworkStatusOrganize = 
@@ -51,7 +51,7 @@ export type HouseworkStatusOrganize =
   | "少し残っている"
   | "残っている"
   | "たまっている"
-  | "限界";
+  | "限界です";
 
 // 家事の状態（全体）
 export type HouseworkStatus = 

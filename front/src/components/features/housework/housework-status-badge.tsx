@@ -56,7 +56,7 @@ function getStatusIcon(status: HouseworkStatus) {
   }
   
   // 限界
-  if (status === "限界") {
+  if (status === "限界です") {
     return <TriangleAlert />;
   }
   
@@ -103,7 +103,7 @@ function getStatusColorClass(status: HouseworkStatus): string {
   }
   
   // 限界 - 赤（濃いめ）
-  if (status === "限界") {
+  if (status === "限界です") {
     return "text-[#FF6453]";
   }
   

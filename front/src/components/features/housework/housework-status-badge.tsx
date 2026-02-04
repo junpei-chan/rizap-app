@@ -22,7 +22,7 @@ interface HouseworkStatusBadgeProps {
 function getStatusIcon(status: HouseworkStatus) {
   // 完了系
   if (status === "完了" || status === "とても綺麗") {
-    return <ThumbsUp />;
+    return <ThumbsUp size={24} />;
   }
   
   // レベル2（少し系、綺麗）
@@ -33,7 +33,7 @@ function getStatusIcon(status: HouseworkStatus) {
     status === "少し残っている" ||
     status === "少し汚れている"
   ) {
-    return <Smile />;
+    return <Smile size={24} />;
   }
   
   // レベル3（中間系）
@@ -42,7 +42,7 @@ function getStatusIcon(status: HouseworkStatus) {
     status === "半分くらい" ||
     status === "残っている"
   ) {
-    return <Frown />;
+    return <Frown size={24} />;
   }
   
   // レベル4（かなり系、汚れている）
@@ -52,15 +52,15 @@ function getStatusIcon(status: HouseworkStatus) {
     status === "たまっている" ||
     status === "汚れている"
   ) {
-    return <ThumbsDown />;
+    return <ThumbsDown size={24} />;
   }
   
   // 限界
-  if (status === "限界") {
-    return <TriangleAlert />;
+  if (status === "限界です") {
+    return <TriangleAlert size={24} />;
   }
   
-  return <CircleQuestionMark />;
+  return <CircleQuestionMark size={24} />;
 }
 
 /**
@@ -103,7 +103,7 @@ function getStatusColorClass(status: HouseworkStatus): string {
   }
   
   // 限界 - 赤（濃いめ）
-  if (status === "限界") {
+  if (status === "限界です") {
     return "text-[#FF6453]";
   }
   
@@ -133,7 +133,7 @@ export function HouseworkStatusBadge({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 px-3 py-1.5 font-medium transition-colors",
+        "inline-flex items-center gap-2 py-1.5 text-[20px] font-medium transition-colors",
         colorClass,
         className
       )}

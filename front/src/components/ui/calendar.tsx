@@ -25,10 +25,12 @@ function Calendar({
   formatters,
   components,
   houseworkDates,
+  onDayClick,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
   houseworkDates?: Set<string>
+  onDayClick?: (date: Date) => void
 }) {
   const defaultClassNames = getDefaultClassNames()
 
@@ -119,10 +121,7 @@ function Calendar({
         ),
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("rounded-r-md bg-accent", defaultClassNames.range_end),
-        today: cn(
-          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
-          defaultClassNames.today
-        ),
+        today: "",
         outside: cn(
           "text-muted-foreground aria-selected:text-muted-foreground",
           defaultClassNames.outside
@@ -166,7 +165,7 @@ function Calendar({
           )
         },
         DayButton: (props) => (
-          <CalendarDayButton {...props} houseworkDates={houseworkDates} />
+          <CalendarDayButton {...props} houseworkDates={houseworkDates} onDayClick={onDayClick} />
         ),
         WeekNumber: ({ children, ...props }) => {
           return (
@@ -189,9 +188,11 @@ function CalendarDayButton({
   day,
   modifiers,
   houseworkDates,
+  onDayClick,
   ...props
 }: React.ComponentProps<typeof DayButton> & {
   houseworkDates?: Set<string>
+  onDayClick?: (date: Date) => void
 }) {
   const defaultClassNames = getDefaultClassNames()
 
@@ -202,6 +203,18 @@ function CalendarDayButton({
 
   const formattedDate = formatDateToYMD(day.date)
   const hasHousework = houseworkDates?.has(formattedDate)
+  const isToday = modifiers.today
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // 元々のonClickを呼び出す
+    if (props.onClick) {
+      props.onClick(e)
+    }
+    // カスタムハンドラも呼び出す（選択済みでも発火）
+    if (onDayClick && !modifiers.disabled && !modifiers.outside) {
+      onDayClick(day.date)
+    }
+  }
 
   return (
     <Button
@@ -219,18 +232,19 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
-        defaultClassNames.day,
+        "flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal",
+        "group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50",
+        "dark:hover:text-accent-foreground",
+        "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px]",
+        !hasHousework && !isToday && defaultClassNames.day,
+        hasHousework && !isToday && "bg-[#E57E57]! hover:bg-[#E57E57]/90! text-white! rounded-full! border-0!",
+        isToday && "bg-transparent! border-2! border-[#E57E57]! rounded-full! text-[#E57E57]! font-medium hover:bg-[#E57E57]/10!",
         className
       )}
+      onClick={handleClick}
       {...props}
     >
-      <span>{day.date.getDate()}</span>
-      {hasHousework && (
-        <div className="flex gap-0.5 items-center justify-center">
-          <div className="w-1 h-1 rounded-full bg-green-500" />
-        </div>
-      )}
+      <span className={cn(hasHousework && !isToday && "text-white font-medium", isToday && "text-[#E57E57] font-medium")}>{day.date.getDate()}</span>
     </Button>
   )
 }

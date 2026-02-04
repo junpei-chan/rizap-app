@@ -3,10 +3,10 @@ import { calenderService } from "@/services/calender/calender-service";
 import { CalenderRequest, CalenderDateRequest } from "@/types/calender.types";
 import { useEffect } from "react";
 
-export const useGetCalender = (params: CalenderRequest) => {
+export const useGetCalender = (params: CalenderRequest | undefined) => {
   const { data, isSuccess, isError, error } = useQuery({
     queryKey: ["calender", params],
-    queryFn: () => calenderService.getCalender(params),
+    queryFn: () => calenderService.getCalender(params!),
     enabled: !!params,
   });
 
@@ -25,24 +25,12 @@ export const useGetCalender = (params: CalenderRequest) => {
   return { data, isSuccess, isError, error };
 };
 
-export const useGetCalenderDate = (params: CalenderDateRequest) => {
-  const { data, isSuccess, isError, error } = useQuery({
+export const useGetCalenderDate = (params: CalenderDateRequest | undefined) => {
+  const { data, isSuccess, isError, error, isLoading, isFetching } = useQuery({
     queryKey: ["calenderDate", params],
-    queryFn: () => calenderService.getCalenderDate(params),
-    enabled: !!params.date && params.date.length > 0,
+    queryFn: () => calenderService.getCalenderDate(params!),
+    enabled: !!params?.date && params.date.length > 0,
   });
 
-  useEffect(() => {
-    if (isSuccess && data) {
-      console.log("日付ごとのカレンダーデータ取得に成功しました");
-    }
-  }, [isSuccess, data]);
-
-  useEffect(() => {
-    if (isError && error) {
-      console.error("日付ごとのカレンダーデータ取得に失敗しました :", error.message);
-    }
-  }, [isError, error]);
-
-  return { data, isSuccess, isError, error };
+  return { data, isSuccess, isError, error, isLoading, isFetching };
 };

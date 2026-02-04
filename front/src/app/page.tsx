@@ -34,7 +34,7 @@ export default function App() {
   const { data: housework } = useGetHousework(
     selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
   );
-  const { data: calenderData } = useGetCalender(
+  const { data: calenderData, isSuccess: isCalenderSuccess } = useGetCalender(
     date ? {
       year: date.getFullYear(),
       month: date.getMonth() + 1,
@@ -106,13 +106,19 @@ export default function App() {
               kcal
             </p>
           </h2>
-          <Calendar
-            className="w-full"
-            mode="single"
-            selected={date}
-            onSelect={handleDateSelect}
-            houseworkDates={houseworkDates}
-          />
+          {!isCalenderSuccess ? (
+            <div className="w-full h-80 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF6201]" />
+            </div>
+          ) : (
+            <Calendar
+              className="w-full"
+              mode="single"
+              selected={date}
+              onSelect={handleDateSelect}
+              houseworkDates={houseworkDates}
+            />
+          )}
         </div>
       )}
 

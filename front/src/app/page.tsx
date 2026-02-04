@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button, Calendar } from "@/components/ui";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
 import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
@@ -23,6 +24,9 @@ export default function App() {
   const { data: calenderData } = useGetCalender({
     year: date?.getFullYear() ?? new Date().getFullYear(),
     month: (date?.getMonth() ?? new Date().getMonth()) + 1,
+  });
+  const { data: calenderDate } = useGetCalenderDate({
+    date: 
   });
 
   const houseworkDates = useMemo(
@@ -119,6 +123,20 @@ export default function App() {
           houseworkDates={houseworkDates}
         />
       </div>
+
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button>開く</Button>
+        </SheetTrigger>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>タイトル</SheetTitle>
+            <SheetDescription>
+              説明文をここに記述します。
+            </SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
     </main>
   )
 }

@@ -26,7 +26,11 @@ export type CalenderRequest = z.infer<typeof calenderRequestSchema>;
 export type CalenderResponse = z.infer<typeof calenderReponseSchema>;
 
 export type CalenderDateRequest = z.infer<typeof calenderDateRequestSchema>;
-export type CalenderDateResponse = number; // 果たして普通のnumberで良いのだろうか🤔
+export type CalenderDateResponse = {
+  houseworkName: string;
+  calorie: number;
+  doneAt: string;
+}
 
 // Store用の型
 export type CalenderData = CalenderResponse | null;

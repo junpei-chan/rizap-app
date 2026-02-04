@@ -18,6 +18,7 @@ return [
   'allowed_methods' => ['*'],
 
   'allowed_origins' => [
+    "http://localhost:3232",
     env('FRONTEND_URL', 'https://rizap-app.vercel.app'),
   ],
 

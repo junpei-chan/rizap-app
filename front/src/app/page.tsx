@@ -44,9 +44,13 @@ export default function App() {
   );
 
   const handleDateSelect = (newDate: Date | undefined) => {
-    setDate(newDate);
     if (newDate) {
+      setDate(newDate);
       setSelectedDateString(formatDateToYMD(newDate));
+      setIsSheetOpen(true);
+    } else if (date) {
+      // 同じ日付をクリックして選択解除された場合、再度開く
+      setSelectedDateString(formatDateToYMD(date));
       setIsSheetOpen(true);
     }
   };

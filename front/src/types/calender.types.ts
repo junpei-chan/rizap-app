@@ -28,3 +28,7 @@ export type CalenderResponse = z.infer<typeof calenderReponseSchema>;
 
 export type CalenderDateRequest = z.infer<typeof calenderDateRequestSchema>;
 export type CalenderDateResponse = CalenderResponse["logs"][number];
+
+// Store用の型
+export type CalenderData = CalenderResponse | null;
+export type CalenderLog = CalenderResponse["logs"][number];

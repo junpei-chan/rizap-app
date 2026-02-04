@@ -9,6 +9,7 @@ export const roomRequestSchema = z.array( // 配列形式
 
 export const houseworkRequestSchema = z.object({
   houseworkId: z.number().int().max(1),
+  calorie: z.number().int(),
 });
 
 export const houseworkResponseSchema = z.object({

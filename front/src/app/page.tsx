@@ -3,8 +3,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button, Calendar } from "@/components/ui";
+import { Flame } from "lucide-react";
 import { CalendarSheet } from "@/components/features/calendar";
-import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
 import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
 import { getHouseworkDatesFromCalendar, formatDateToYMD, formatDateToYMDHMS } from "@/lib/utils/";
@@ -73,7 +73,7 @@ export default function App() {
   };
 
   return (
-    <main className="bg-gray-500 w-screen h-screen">
+    <main className="bg-gray-300 w-screen h-screen">
       <div className="flex flex-col gap-4">
         {HOMEWORK_ITEMS.map((item) => (
           <Button
@@ -99,17 +99,33 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* <div>
-        <h2>Total Calorie: {calenderData?.totalCalorie}</h2>
-        {isMounted && (
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleDateSelect}
-            houseworkDates={houseworkDates}
-          />
-        )}
-      </div> */}
+      {isMounted && (
+        <div className="w-88 bg-white flex flex-col gap-4 items-center mx-auto px-6 py-4 rounded-lg shadow-[2px_16px_19px_0px_rgba(0,0,0,0.09)]">
+          <h2 className="w-full flex items-center gap-2">
+            <div className="inline-flex items-center justify-center rounded-full p-1 bg-[#FF6201]">
+              <Flame 
+                color="white"
+                size={24}
+              />
+            </div>
+            <p className="flex items-end gap-1">
+              <span className="text-2xl font-bold">
+                {calenderData?.totalCalorie}
+              </span>
+              kcal
+            </p>
+          </h2>
+          {isMounted && (
+            <Calendar
+              className="w-full"
+              mode="single"
+              selected={date}
+              onSelect={handleDateSelect}
+              houseworkDates={houseworkDates}
+            />
+          )}
+        </div>
+      )}
 
       {calenderDate?.date && (
         <CalendarSheet 

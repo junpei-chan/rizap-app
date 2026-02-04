@@ -1,1 +1,1 @@
-export * from "./housework-service";
+export { HouseworkService } from "./housework-service";

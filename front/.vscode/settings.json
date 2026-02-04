@@ -1,8 +1,10 @@
 {
   // TypeScript パフォーマンス最適化
-  "typescript.tsserver.maxTsServerMemory": 4096,
+  "typescript.tsserver.maxTsServerMemory": 8192,
   "typescript.disableAutomaticTypeAcquisition": false,
   "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "typescript.updateImportsOnFileMove.enabled": "never",
   
   // ファイル監視の除外設定
   "files.watcherExclude": {

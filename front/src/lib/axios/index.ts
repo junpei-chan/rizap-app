@@ -1,2 +1,2 @@
-export * from "./auth-client";
-export * from "./public-client";
+export { authClient } from "./auth-client";
+export { publicClient } from "./public-client";

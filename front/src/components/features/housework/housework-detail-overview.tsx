@@ -47,7 +47,7 @@ export function HouseworkDetailOverview({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className={`
-        fixed top-0 right-0 w-screen h-screen bg-linear-to-b from-white via-white/80 to-white/0 z-10
+        fixed top-0 right-0 w-screen h-screen z-50
         ${IbmPlexSansJpFont.className}
       `}
     >
@@ -60,7 +60,7 @@ export function HouseworkDetailOverview({
       <div
         className="absolute bottom-0 w-full flex flex-col items-center gap-9 pt-35 pb-14"
         style={{
-          background: 'linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 75%, rgba(255, 255, 255, 0) 100%)'
+          background: 'linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, rgba(255, 255, 255, 0) 100%)'
         }}
       >
         <h2 className="text-text text-4xl font-semibold">

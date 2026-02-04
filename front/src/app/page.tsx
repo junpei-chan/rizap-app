@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { HOMEWORK_ITEMS } from "@/data/homework-items"
+import { HOMEWORK_ITEMS } from "@/data/homework-items";
 import { Button, Calendar } from "@/components/ui";
 import { Flame } from "lucide-react";
 import { CalendarSheet } from "@/components/features/calendar";
+import { ClickableRoom } from "@/components/features/room";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
 import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
 import { getHouseworkDatesFromCalendar, formatDateToYMD, formatDateToYMDHMS } from "@/lib/utils/";
@@ -44,13 +45,9 @@ export default function App() {
   );
 
   const handleDateSelect = (newDate: Date | undefined) => {
+    setDate(newDate);
     if (newDate) {
-      setDate(newDate);
       setSelectedDateString(formatDateToYMD(newDate));
-      setIsSheetOpen(true);
-    } else if (date) {
-      // 同じ日付をクリックして選択解除された場合、再度開く
-      setSelectedDateString(formatDateToYMD(date));
       setIsSheetOpen(true);
     }
   };
@@ -77,18 +74,8 @@ export default function App() {
   };
 
   return (
-    <main className="bg-gray-300 w-screen h-screen">
-      <div className="flex flex-col gap-4">
-        {HOMEWORK_ITEMS.map((item) => (
-          <Button
-            key={item.id}
-            className="border w-30"
-            onClick={() => setSelectedId(item.id)}
-          >
-            {item.label}
-          </Button>
-        ))}
-      </div>
+    <main className="w-screen h-screen bg-white">
+      <ClickableRoom onItemClick={setSelectedId} />
 
       <AnimatePresence>
         {selectedId && (
@@ -104,7 +91,7 @@ export default function App() {
       </AnimatePresence>
 
       {isMounted && (
-        <div className="w-88 bg-white flex flex-col gap-4 items-center mx-auto px-6 py-4 rounded-lg shadow-[2px_16px_19px_0px_rgba(0,0,0,0.09)]">
+        <div className="absolute bottom-6 right-1/2 translate-x-1/2 w-88 bg-white flex flex-col gap-2 items-center mx-auto px-6 pt-4 rounded-lg shadow-[2px_16px_19px_0px_rgba(0,0,0,0.09)] z-20">
           <h2 className="w-full flex items-center gap-2">
             <div className="inline-flex items-center justify-center rounded-full p-1 bg-[#FF6201]">
               <Flame 
@@ -131,20 +118,18 @@ export default function App() {
         </div>
       )}
 
-      <AnimatePresence>
-        {calenderDate?.date && isSheetOpen && (
-          <CalendarSheet 
-            date={calenderDate.date}
-            totalCalorie={calenderDate.totalCalorie}
-            logs={calenderDate.logs.map((log) => ({
-              ...log,
-              doneAt: formatDateToYMDHMS(new Date(log.doneAt))
-            }))}
-            isOpen={isSheetOpen}
-            onOpenChange={setIsSheetOpen}
-          />
-        )}
-      </AnimatePresence>
+      {calenderDate?.date && (
+        <CalendarSheet 
+          date={calenderDate.date}
+          totalCalorie={calenderDate.totalCalorie}
+          logs={calenderDate.logs.map((log) => ({
+            ...log,
+            doneAt: formatDateToYMDHMS(new Date(log.doneAt))
+          }))}
+          isOpen={isSheetOpen}
+          onOpenChange={setIsSheetOpen}
+        />
+      )}
     </main>
   )
 }

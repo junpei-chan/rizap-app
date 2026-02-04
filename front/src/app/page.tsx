@@ -74,8 +74,8 @@ export default function App() {
   };
 
   return (
-    <main className="w-screen h-screen bg-white">
-      <ClickableRoom onItemClick={setSelectedId} />
+    <main className="w-screen h-screen bg-gray-400">
+      <ClickableRoom onItemClick={setSelectedId} selectedId={selectedId} />
 
       <AnimatePresence>
         {selectedId && (
@@ -90,7 +90,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {isMounted && (
+      {isMounted && !isSheetOpen && !selectedId && (
         <div className="absolute bottom-6 right-1/2 translate-x-1/2 w-88 bg-white flex flex-col gap-2 items-center mx-auto px-6 pt-4 rounded-lg shadow-[2px_16px_19px_0px_rgba(0,0,0,0.09)] z-20">
           <h2 className="w-full flex items-center gap-2">
             <div className="inline-flex items-center justify-center rounded-full p-1 bg-[#FF6201]">
@@ -106,15 +106,13 @@ export default function App() {
               kcal
             </p>
           </h2>
-          {isMounted && (
-            <Calendar
-              className="w-full"
-              mode="single"
-              selected={date}
-              onSelect={handleDateSelect}
-              houseworkDates={houseworkDates}
-            />
-          )}
+          <Calendar
+            className="w-full"
+            mode="single"
+            selected={date}
+            onSelect={handleDateSelect}
+            houseworkDates={houseworkDates}
+          />
         </div>
       )}
 

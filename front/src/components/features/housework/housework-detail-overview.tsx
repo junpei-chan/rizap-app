@@ -50,6 +50,9 @@ export function HouseworkDetailOverview({
         fixed top-0 right-0 w-screen h-screen z-50
         ${IbmPlexSansJpFont.className}
       `}
+      style={{
+        background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 20%)'
+      }}
     >
       <button
         className="absolute top-10 left-6 flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0px_0px_6px_0px_rgba(0,0,0,0.4)]" 

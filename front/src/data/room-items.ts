@@ -25,21 +25,21 @@ export const ROOM_ITEMS: RoomItem[] = [
     name: "お風呂",
     houseworkId: "6", // 風呂掃除
     position: {
-      top: "18%",
-      left: "58%",
-      width: "22%",
+      top: "25%",
+      left: "60%",
+      width: "25%",
       height: "28%",
     },
   },
   {
     id: "washing-machine",
-    name: "洗濯機",
+    name: "洗濯物",
     houseworkId: "2", // 洗濯物
     position: {
-      top: "12%",
-      left: "8%",
-      width: "12%",
-      height: "18%",
+      top: "60%",
+      left: "20%",
+      width: "14%",
+      height: "14%",
     },
   },
   {
@@ -47,9 +47,9 @@ export const ROOM_ITEMS: RoomItem[] = [
     name: "シンク",
     houseworkId: "1", // 洗い物
     position: {
-      top: "12%",
-      left: "20%",
-      width: "15%",
+      top: "24%",
+      left: "24%",
+      width: "20%",
       height: "16%",
     },
   },
@@ -58,10 +58,10 @@ export const ROOM_ITEMS: RoomItem[] = [
     name: "トイレ",
     houseworkId: "7", // トイレ掃除
     position: {
-      top: "18%",
-      left: "78%",
+      top: "35%",
+      left: "85%",
       width: "14%",
-      height: "22%",
+      height: "18%",
     },
   },
   {
@@ -70,8 +70,8 @@ export const ROOM_ITEMS: RoomItem[] = [
     houseworkId: "3", // ゴミ捨て
     position: {
       top: "52%",
-      left: "8%",
-      width: "10%",
+      left: "12%",
+      width: "13%",
       height: "18%",
     },
   },
@@ -80,10 +80,10 @@ export const ROOM_ITEMS: RoomItem[] = [
     name: "床",
     houseworkId: "4", // 床掃除
     position: {
-      top: "48%",
+      top: "40%",
       left: "38%",
       width: "28%",
-      height: "20%",
+      height: "24%",
     },
   },
   {
@@ -92,9 +92,9 @@ export const ROOM_ITEMS: RoomItem[] = [
     houseworkId: "5", // 整理整頓
     position: {
       top: "52%",
-      left: "68%",
-      width: "18%",
-      height: "16%",
+      left: "70%",
+      width: "24%",
+      height: "20%",
     },
   },
 ];

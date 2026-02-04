@@ -1,23 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 import Image from "next/image";
 import { ROOM_ITEMS } from "@/data/room-items";
 import { motion } from "framer-motion";
 
 interface ClickableRoomProps {
   onItemClick: (houseworkId: string) => void;
+  selectedId: string | null;
 }
 
 /**
  * クリック可能な部屋コンポーネント
  * 画像上の各アイテムにクリック領域を配置し、選択された家事の詳細を表示
  */
-export function ClickableRoom({ onItemClick }: ClickableRoomProps) {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
+  // 選択されたアイテムを見つける
+  const selectedItem = useMemo(() => {
+    if (!selectedId) return null;
+    return ROOM_ITEMS.find(item => item.houseworkId === selectedId);
+  }, [selectedId]);
+
+  // ズームとパンの計算
+  const transformStyle = useMemo(() => {
+    if (!selectedItem) {
+      return { scale: 1, x: 0, y: 0 };
+    }
+
+    const scale = 2;
+
+    // アイテムの中心位置を計算（%を数値に変換）
+    const itemCenterX = parseFloat(selectedItem.position.left) + parseFloat(selectedItem.position.width) / 2;
+    const itemCenterY = parseFloat(selectedItem.position.top) + parseFloat(selectedItem.position.height) / 2;
+
+    // 画面中央は50%, 50%なので、その差分を計算
+    const deltaX = 50 - itemCenterX;
+    const deltaY = 50 - itemCenterY;
+
+    // ピクセル単位に変換（w-93 = 372px, h-111 = 444px として計算）
+    const containerWidth = 372;
+    const containerHeight = 444;
+    // スケール後の移動量を計算（スケールを考慮）
+    const translateX = (deltaX / 100) * containerWidth * scale;
+    const translateY = (deltaY / 100) * containerHeight * scale;
+
+    return {
+      scale: scale,
+      x: translateX,
+      y: translateY,
+    };
+  }, [selectedItem]);
 
   return (
-    <div className="fixed top-7 right-1/2 translate-x-1/2 w-93 h-111 z-0">
+    <motion.div 
+      className="fixed top-7 right-1/2 translate-x-1/2 w-93 h-111 z-0"
+      animate={{
+        scale: transformStyle.scale,
+        x: transformStyle.x,
+        y: transformStyle.y,
+      }}
+      transition={{
+        duration: 0.6,
+        ease: [0.4, 0, 0.2, 1],
+      }}
+    >
       {/* 背景画像 */}
       <Image
         src="/images/room.svg"
@@ -30,39 +76,18 @@ export function ClickableRoom({ onItemClick }: ClickableRoomProps) {
       {ROOM_ITEMS.map((item) => (
         <motion.button
           key={item.id}
-          className="absolute cursor-pointer rounded-lg border-2 border-transparent transition-colors"
+          className="absolute cursor-pointer"
           style={{
             top: item.position.top,
             left: item.position.left,
             width: item.position.width,
             height: item.position.height,
-            backgroundColor:
-              hoveredId === item.id
-                ? "rgba(59, 130, 246, 0.25)" // blue-500/25
-                : "transparent",
+            backgroundColor: "transparent",
           }}
-          onMouseEnter={() => setHoveredId(item.id)}
-          onMouseLeave={() => setHoveredId(null)}
           onClick={() => onItemClick(item.houseworkId)}
           aria-label={`${item.name}を選択`}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          {/* ホバー時のラベル表示 */}
-          {hoveredId === item.id && (
-            <motion.div
-              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-md whitespace-nowrap shadow-lg"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 5 }}
-              transition={{ duration: 0.15 }}
-            >
-              {item.name}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900" />
-            </motion.div>
-          )}
-        </motion.button>
+        />
       ))}
-    </div>
+    </motion.div>
   );
 }

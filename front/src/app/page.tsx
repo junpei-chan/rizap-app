@@ -49,24 +49,15 @@ export default function App() {
                 <h2>
                   {HOMEWORK_ITEMS[Number(housework.houseworkId) - 1].label}
                 </h2>
-                <Button
-                  className="border"
-                  onClick={() => handleHouseworkStart(Number(housework.houseworkId))}
-                >
-                  {!isHouseworkRunning() ? (
-                    <>
+                {!isHouseworkRunning() ? (
+                  <>
+                    <Button 
+                      className="border"
+                      onClick={() => handleHouseworkStart(Number(housework.houseworkId))}
+                    >
                       <Play />
                       作業開始
-                    </>
-                  ) : (
-                    <>
-                      <X />
-                      作業終了
-                    </>
-                  )}
-                </Button>
-                {!isHouseworkRunning() && (
-                  <>
+                    </Button>
                     <div>
                       <h3>最後に作業した日</h3>
                       <p>{label}</p>
@@ -78,6 +69,16 @@ export default function App() {
                         houseworkId={housework.houseworkId}
                       />
                     </div>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      className="border"
+                      onClick={() => }
+                    >
+                      <X />
+                      作業終了
+                    </Button>
                   </>
                 )}
               </div>

@@ -65,17 +65,21 @@ export default function App() {
                     </>
                   )}
                 </Button>
-                <div>
-                  <h3>最後に作業した日</h3>
-                  <p>{label}</p>
-                </div>
-                <div>
-                  <h3>現在の状態</h3>
-                  <HouseworkStatusBadge 
-                    lastDoneDate={housework.doneAt}
-                    houseworkId={housework.houseworkId}
-                  />
-                </div>
+                {!isHouseworkRunning() && (
+                  <>
+                    <div>
+                      <h3>最後に作業した日</h3>
+                      <p>{label}</p>
+                    </div>
+                    <div>
+                      <h3>現在の状態</h3>
+                      <HouseworkStatusBadge 
+                        lastDoneDate={housework.doneAt}
+                        houseworkId={housework.houseworkId}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             );
           })()}

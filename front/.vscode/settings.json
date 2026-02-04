@@ -1,0 +1,35 @@
+{
+  // TypeScript パフォーマンス最適化
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "typescript.disableAutomaticTypeAcquisition": false,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  
+  // ファイル監視の除外設定
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/out/**": true,
+    "**/dist/**": true,
+    "../back/**": true,
+    "../docs/**": true
+  },
+  
+  // 検索対象の除外設定
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/out": true,
+    "**/dist": true,
+    "../back": true
+  },
+  
+  // ファイル除外設定
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "../back": false,
+    "../docs": false
+  }
+}

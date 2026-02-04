@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { HouseworkService } from "@/services/housework/housework-service";
 import { HouseworkRequest, HouseworkStartRequest } from "@/types/housework.types";
@@ -31,11 +31,14 @@ export const useGetHousework = (params?: HouseworkRequest) => {
 
 export const useStartHousework = () => {
   const startHousework = useHouseworkStore((state) => state.startHousework);
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (housework: HouseworkStartRequest) => HouseworkService.startHousework(housework),
     onSuccess: (_, variables) => {
       startHousework(variables.houseworkId);
+      // React Query のキャッシュを無効化して再フェッチ
+      queryClient.invalidateQueries({ queryKey: ["housework", variables.houseworkId] });
       console.log("家事の開始に成功しました");
     },
     onError: (error: ApiError & { response?: { status: number } }, variables) => {
@@ -51,11 +54,14 @@ export const useStartHousework = () => {
 
 export const useEndHousework = () => {
   const endHousework = useHouseworkStore((state) => state.endHousework);
+  const queryClient = useQueryClient();
 
   return useMutation ({
     mutationFn: (params: HouseworkRequest) => HouseworkService.endHousework(params),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       endHousework();
+      // React Query のキャッシュを無効化して再フェッチ
+      queryClient.invalidateQueries({ queryKey: ["housework", variables.houseworkId] });
       console.log("家事の終了に成功しました");
     },
     onError: (error: ApiError) => {

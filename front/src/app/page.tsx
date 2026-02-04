@@ -4,24 +4,36 @@ import { useState } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button } from "@/components/ui";
 import { Play, X } from "lucide-react";
-import { useGetHousework, useStartHousework } from "@/hooks/features/housework";
-import { calculateTimeDifference } from "@/lib/utils/";
+import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
+import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
+import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
 
 export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { data: housework, isLoading, error } = useGetHousework(
-    selectedId ? { houseworkId: Number(selectedId) } : undefined
+    selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
   );
   const { mutate: startHousework } = useStartHousework();
+  const { mutate: endHousework } = useEndHousework();
   const { isHouseworkRunning } = useHouseworkStore();
 
   const handleHouseworkStart = (id: number) => {
     startHousework({
       houseworkId: id,
     });
-  }
+  };
+
+  const handleHouseworkEnd = (
+    id: number,
+    calorie: number,
+  ) => {
+    endHousework({
+      houseworkId: id,
+      calorie: calorie,
+    });
+  };
 
   return (
     <main>
@@ -42,7 +54,9 @@ export default function App() {
           {isLoading && <p>読み込み中...</p>}
           {error && <p>エラーが発生しました</p>}
           {housework && (() => {
-            const label = calculateTimeDifference(housework.doneAt);
+            const label = calculateTimeDifference(housework.doneAt); // 最後に作業した日
+            const status = getHouseworkStatusById(housework.doneAt, housework.houseworkId); // 現在の状態
+            const calorie = getCaloriesByHouseworkAndLevel(housework.houseworkId, status); // 消費カロリー
 
             return (
               <div>
@@ -74,7 +88,7 @@ export default function App() {
                   <>
                     <Button 
                       className="border"
-                      onClick={() => }
+                      onClick={() => handleHouseworkEnd(Number(housework.houseworkId), calorie)}
                     >
                       <X />
                       作業終了

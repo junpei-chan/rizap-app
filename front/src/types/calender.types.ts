@@ -27,7 +27,7 @@ export type CalenderRequest = z.infer<typeof calenderRequestSchema>;
 export type CalenderResponse = z.infer<typeof calenderReponseSchema>;
 
 export type CalenderDateRequest = z.infer<typeof calenderDateRequestSchema>;
-export type CalenderDateResponse = CalenderResponse["logs"][number];
+export type CalenderDateResponse = number; // 果たして普通のnumberで良いのだろうか🤔
 
 // Store用の型
 export type CalenderData = CalenderResponse | null;

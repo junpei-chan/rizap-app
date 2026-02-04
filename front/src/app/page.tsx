@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
-import { Button } from "@/components/ui";
+import { Button, Calendar } from "@/components/ui";
 import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
 import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
@@ -11,6 +11,7 @@ import { HouseworkStatusBadge } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
 
 export default function App() {
+  const [date, setDate] = useState<Date | undefined>(new Date())
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { data: housework, isLoading, error } = useGetHousework(
     selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
@@ -100,6 +101,11 @@ export default function App() {
           })()}
         </div>
       )}
+      <Calendar 
+        mode="single"
+        selected={date}
+        onSelect={setDate}
+      />
     </main>
   )
 }

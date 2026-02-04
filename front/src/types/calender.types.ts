@@ -19,5 +19,12 @@ export const calenderReponseSchema = z.object({
   ),
 });
 
+export const calenderDateRequestSchema = z.object({
+  date: z.number().int(),
+});
+
 export type CalenderRequest = z.infer<typeof calenderRequestSchema>;
 export type CalenderResponse = z.infer<typeof calenderReponseSchema>;
+
+export type CalenderDateRequest = z.infer<typeof calenderDateRequestSchema>;
+export type CalenderDateResponse = CalenderResponse["logs"][number];

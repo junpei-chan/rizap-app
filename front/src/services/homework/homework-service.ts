@@ -4,7 +4,7 @@ import type { ApiResponse } from "@/types/api.types";
 
 export const HomeworkService = {
   setupRoom: async (params?: RoomRequest) => {
-    const { data } = await publicClient.patch<ApiResponse>("/room",
+    const { data } = await publicClient.post<ApiResponse>("/room",
       params,
     );
     return data;

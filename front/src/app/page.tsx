@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button, Calendar } from "@/components/ui";
 import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
 import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
-import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
+import { calculateTimeDifference, getHouseworkStatusById, getHouseworkDatesFromCalendar } from "@/lib/utils/";
 import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
@@ -24,6 +24,11 @@ export default function App() {
     year: date?.getFullYear() ?? new Date().getFullYear(),
     month: (date?.getMonth() ?? new Date().getMonth()) + 1,
   });
+
+  const houseworkDates = useMemo(
+    () => getHouseworkDatesFromCalendar(calenderData),
+    [calenderData]
+  );
 
   const handleHouseworkStart = (id: number) => {
     startHousework({
@@ -104,11 +109,16 @@ export default function App() {
           })()}
         </div>
       )}
-      <Calendar 
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-      />
+
+      <div>
+        <h2>Total Calorie: {calenderData?.totalCalorie}</h2>
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          houseworkDates={houseworkDates}
+        />
+      </div>
     </main>
   )
 }

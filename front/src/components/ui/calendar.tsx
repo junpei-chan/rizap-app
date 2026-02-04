@@ -23,9 +23,11 @@ function Calendar({
   buttonVariant = "ghost",
   formatters,
   components,
+  houseworkDates,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
+  houseworkDates?: Set<string>
 }) {
   const defaultClassNames = getDefaultClassNames()
 
@@ -162,7 +164,9 @@ function Calendar({
             <ChevronDownIcon className={cn("size-4", className)} {...props} />
           )
         },
-        DayButton: CalendarDayButton,
+        DayButton: (props) => (
+          <CalendarDayButton {...props} houseworkDates={houseworkDates} />
+        ),
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
@@ -183,8 +187,11 @@ function CalendarDayButton({
   className,
   day,
   modifiers,
+  houseworkDates,
   ...props
-}: React.ComponentProps<typeof DayButton>) {
+}: React.ComponentProps<typeof DayButton> & {
+  houseworkDates?: Set<string>
+}) {
   const defaultClassNames = getDefaultClassNames()
 
   const ref = React.useRef<HTMLButtonElement>(null)
@@ -200,12 +207,15 @@ function CalendarDayButton({
     return `${year}-${month}-${day}`
   }
 
+  const formattedDate = formatLocalDate(day.date)
+  const hasHousework = houseworkDates?.has(formattedDate)
+
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={formatLocalDate(day.date)}
+      data-day={formattedDate}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&
@@ -221,7 +231,14 @@ function CalendarDayButton({
         className
       )}
       {...props}
-    />
+    >
+      <span>{day.date.getDate()}</span>
+      {hasHousework && (
+        <div className="flex gap-0.5 items-center justify-center">
+          <div className="w-1 h-1 rounded-full bg-green-500" />
+        </div>
+      )}
+    </Button>
   )
 }
 

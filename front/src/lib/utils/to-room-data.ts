@@ -10,7 +10,7 @@ export function toRoomData(answers: Record<string, number>) {
     "toilet_last": 7,
   };
 
-  return Object.entries(answers)
+  const result = Object.entries(answers)
     .filter(([key]) => key !== "meal_frequency")
     .map(([questionId, daysAgo]) => {
       const houseworkId = QUESTION_TO_HOUSEWORK_MAP[questionId];
@@ -19,9 +19,20 @@ export function toRoomData(answers: Record<string, number>) {
       const doneAt = new Date();
       doneAt.setDate(doneAt.getDate() - daysAgoNum);
 
+      // ↓ こんなの分かるわけないだろ！！😡😡
+      // MySQL用のフォーマット: YYYY-MM-DD HH:mm:ss
+      const year = doneAt.getFullYear();
+      const month = String(doneAt.getMonth() + 1).padStart(2, '0');
+      const day = String(doneAt.getDate()).padStart(2, '0');
+      const hours = String(doneAt.getHours()).padStart(2, '0');
+      const minutes = String(doneAt.getMinutes()).padStart(2, '0');
+      const seconds = String(doneAt.getSeconds()).padStart(2, '0');
+      const mysqlFormat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
       return {
         homework_id: houseworkId,
-        done_at: doneAt.toISOString(),
+        done_at: mysqlFormat,
       };
-    })
+    });
+  return result;
 }

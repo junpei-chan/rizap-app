@@ -15,19 +15,19 @@
     import { toRoomData } from "@/lib/utils/to-room-data";
 
     function readAnswers(): Record<string, string> {
-    if (typeof window === "undefined") return {};
-    try {
-        const raw = sessionStorage.getItem("onboarding_answers");
-        return raw ? (JSON.parse(raw) as Record<string, string>) : {};
-    } catch {
-        return {};
-    }
+        if (typeof window === "undefined") return {};
+        try {
+            const raw = sessionStorage.getItem("onboarding_answers");
+            return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+        } catch {
+            return {};
+        }
     }
 
     function writeAnswers(next: Record<string, string>) {
-    if (typeof window === "undefined") return;
-    sessionStorage.setItem("onboarding_answers", JSON.stringify(next));
-    }
+        if (typeof window === "undefined") return;
+            sessionStorage.setItem("onboarding_answers", JSON.stringify(next));
+        }
 
     export default function OnboardingStepPage() {
     const { setMealFrequency } = useUserStore();
@@ -54,16 +54,19 @@
     const isFirst = stepIndex === 0;
     const isLast = stepIndex === STEPS.length - 1;
 
-    // 既存回答があれば復元（戻った時に選択残す）
-    const [selected, setSelected] = useState<number | null>(() => {
+    const [selected, setSelected] = useState<number | null>(null);
+
+    useEffect(() => {
         const saved = readAnswers();
         const savedValue = saved[step.id];
-        return savedValue !== undefined ? Number(savedValue) : null;
-    });
+        if (savedValue !== undefined) {
+            setSelected(Number(savedValue));
+        }
+    }, [step.id]);
 
     const goPrev = () => {
         if (isFirst) return;
-        router.push(`/onboarding/${stepIndex}`); // 1個前（index+1なので stepIndex）
+        router.push(`/onboarding/${stepIndex}`);
     };
 
     const goNext = () => {
@@ -73,9 +76,10 @@
 
         // ✅ 保存（9問の答えとして使えるように）
         const saved = readAnswers();
-        writeAnswers({ ...saved, [step.id]: String(selected) });
+        const updatedAnswers = { ...saved, [step.id]: String(selected) };
+        writeAnswers(updatedAnswers);
 
-        const numericAnswers = Object.entries(saved).reduce<Record<string, number>>((acc, [key, value]) => {
+        const numericAnswers = Object.entries(updatedAnswers).reduce<Record<string, number>>((acc, [key, value]) => {
             const numValue = Number(value);
             if (Number.isFinite(numValue)) {
                 acc[key] = numValue;
@@ -101,7 +105,7 @@
         });
     }
 
-    const handleAnswersSubmit = (roomData: { homeworkId: number; doneAt: number }[]) => {
+    const handleAnswersSubmit = (roomData: { homework_id: number; done_at: string }[]) => {
         setupRoom(roomData);
     }
 

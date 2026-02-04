@@ -101,11 +101,11 @@
     const handleMealFrequencySubmit = () => {
         if (selected === null) return;
         createMealFrequency({
-            meal_frequency: selected, // TODO: バックエンド側でcamelCaseを受け入れるように
+            mealFrequency: selected,
         });
     }
 
-    const handleAnswersSubmit = (roomData: { housework_id: number; done_at: string }[]) => {
+    const handleAnswersSubmit = (roomData: { houseworkId: number; doneAt: string }[]) => {
         setupRoom(roomData);
     }
 

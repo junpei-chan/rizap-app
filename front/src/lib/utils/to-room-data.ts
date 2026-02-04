@@ -11,7 +11,7 @@ export function toRoomData(answers: Record<string, number>) {
   };
 
   const result = Object.entries(answers)
-    .filter(([key]) => key !== "meal_frequency")
+    .filter(([key]) => key !== "mealFrequency")
     .map(([questionId, daysAgo]) => {
       const houseworkId = QUESTION_TO_HOUSEWORK_MAP[questionId];
       const daysAgoNum = Number(daysAgo);
@@ -30,8 +30,8 @@ export function toRoomData(answers: Record<string, number>) {
       const mysqlFormat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
       return {
-        housework_id: houseworkId,
-        done_at: mysqlFormat,
+        houseworkId: houseworkId,
+        doneAt: mysqlFormat,
       };
     });
   return result;

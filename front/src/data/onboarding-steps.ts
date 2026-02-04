@@ -8,7 +8,7 @@ export type StepDef = {
 
 export const STEPS: StepDef[] = [
   {
-    id: "meal_frequency",
+    id: "mealFrequency",
     question: "普段、週にどれくらいの頻度で\n家でご飯を食べますか？",
     options: ["0回", "3~4回", "7回"],
     optionNums: [0, 4, 7],

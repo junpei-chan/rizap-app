@@ -66,12 +66,13 @@
     const goNext = () => {
         if (!selected) return;
 
+        if (isFirst) handleSubmit();
+
         // ✅ 保存（9問の答えとして使えるように）
         const saved = readAnswers();
         writeAnswers({ ...saved, [step.id]: String(selected) });
 
         if (isLast) {
-            // とりあえずトップへ(ここを後で「部屋ページ」に変える)
             router.push("/");
             return;
         }
@@ -79,12 +80,15 @@
         router.push(`/onboarding/${stepIndex + 2}`);
     };
 
+    const handleSubmit = () => {
+        if (selected === null) return;
+        mutate({
+            meal_frequency: selected, // TODO: バックエンド側でcamelCaseを受け入れるように
+        });
+    }
+
     useEffect(() => {
         if (isFirst && selected !== null) {
-            mutate({
-                meal_frequency: selected, // TODO: バックエンド側でcamelCaseを受け入れるように
-            });
-
             setMealFrequency(selected);
         }
     }, [isFirst, selected, setMealFrequency]);

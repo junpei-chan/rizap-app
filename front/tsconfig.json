@@ -16,6 +16,8 @@
     "verbatimModuleSyntax": false,
     "importsNotUsedAsValues": "remove",
     "assumeChangesOnlyAffectDirectDependencies": true,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "disableSolutionSearching": true,
     "plugins": [
       {
         "name": "next"

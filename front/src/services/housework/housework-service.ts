@@ -1,5 +1,5 @@
 import { authClient } from "@/lib/axios";
-import { RoomRequest, HouseworkRequest, HouseworkResponse, HouseworkStartRequest } from "@/types/housework.types";
+import type { RoomRequest, HouseworkRequest, HouseworkResponse, HouseworkStartRequest } from "@/types/housework-base.types";
 import type { ApiResponse } from "@/types/api.types";
 
 export const HouseworkService = {

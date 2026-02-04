@@ -8,6 +8,11 @@
   "typescript.tsserver.useSyntaxServer": "auto",
   "typescript.enablePromptUseWorkspaceTsdk": false,
   
+  // 重い型ファイルのログを抑制
+  "typescript.tsserver.log": "off",
+  "typescript.suggest.enabled": true,
+  "typescript.suggest.autoImports": true,
+  
   // ファイル監視の除外設定
   "files.watcherExclude": {
     "**/.git/objects/**": true,

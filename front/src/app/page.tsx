@@ -4,7 +4,8 @@ import { useState } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button } from "@/components/ui";
 import { useGetHousework } from "@/hooks/features/housework";
-import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
+import { calculateTimeDifference } from "@/lib/utils/";
+import { HouseworkStatusBadge } from "@/components/features/housework";
 
 export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -32,6 +33,7 @@ export default function App() {
           {error && <p>エラーが発生しました</p>}
           {housework && (() => {
             const label = calculateTimeDifference(housework.doneAt);
+
             return (
               <div>
                 <h2>
@@ -43,6 +45,10 @@ export default function App() {
                 </div>
                 <div>
                   <h3>現在の状態</h3>
+                  <HouseworkStatusBadge 
+                    lastDoneDate={housework.doneAt}
+                    houseworkId={housework.houseworkId}
+                  />
                 </div>
               </div>
             );

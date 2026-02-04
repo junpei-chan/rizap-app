@@ -147,16 +147,16 @@ export function getHouseworkStatus(
  */
 export function getHouseworkStatusById(
   lastDoneDate: string,
-  houseworkId: number
+  houseworkId: string,
 ): HouseworkStatus {
   const daysSince = calculateDaysSinceLastDone(lastDoneDate);
   
   switch (houseworkId) {
-    case 1:
+    case "1":
       return getLaundryStatus(daysSince);
-    case 2:
+    case "2":
       return getTrashStatus(daysSince);
-    case 3:
+    case "3":
       return getOrganizeStatus(daysSince);
     default:
       return getNormalStatus(daysSince);

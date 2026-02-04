@@ -1,35 +1,51 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { calenderService } from "@/services/calender/calender-service";
-import { CalenderRequest, CalenderDateRequest, CalenderResponse, CalenderDateResponse } from "@/types/calender.types";
-import { ApiError } from "@/types/api.types";
+import { CalenderRequest, CalenderDateRequest } from "@/types/calender.types";
 import { useCalenderStore } from "@/stores/calender-store";
+import { useEffect } from "react";
 
-export const useGetCalender = () => {
+export const useGetCalender = (params: CalenderRequest) => {
   const { setCalenderData } = useCalenderStore();
 
-  return useMutation({
-    mutationFn: (params: CalenderRequest) => calenderService.getCalender(params),
-    onSuccess: (data: CalenderResponse) => {
+  const { data, isSuccess, isError, error } = useQuery({
+    queryKey: ["calender"],
+    queryFn: () => calenderService.getCalender(params),
+    enabled: !!params,
+  });
+
+  useEffect(() => {
+    if (isSuccess && data) {
       setCalenderData(data); // Zustandストア更新
-      console.log("カレンダーの取得に成功しました");
-    },
-    onError: (error: ApiError) => {
-      console.error("カレンダーの取得に失敗しました :", error.message);
-    },
+      console.log("カレンダーデータの取得に成功しました");
+    };
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      console.error("カレンダーデータの取得に失敗しました :", error.message);
+    };
   });
 };
 
-export const useGetCalenderDate = () => {
+export const useGetCalenderDate = (params: CalenderDateRequest) => {
   const { setSelectedDate } = useCalenderStore();
 
-  return useMutation({
-    mutationFn: (params: CalenderDateRequest) => calenderService.getCalenderDate(params),
-    onSuccess: (data: CalenderDateResponse) => {
+  const { data, isSuccess, isError, error } = useQuery({
+    queryKey: ["calenderDate"],
+    queryFn: () => calenderService.getCalenderDate(params),
+    enabled: !!params,
+  });
+
+  useEffect(() => {
+    if (isSuccess && data) {
       setSelectedDate(data); // Zustandストア更新
-      console.log("日付ごとのカレンダーデータの取得に成功しました");
-    },
-    onError: (error: ApiError) => {
-      console.error("日付ごとのカレンダーデータの取得に失敗しました :", error.message);
-    },
+      console.log("日付ごとのカレンダーデータ取得に成功しました");
+    };
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      console.error("日付ごとのカレンダーデータ取得に失敗しました :", error.message);
+    };
   });
 };

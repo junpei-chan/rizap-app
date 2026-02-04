@@ -17,7 +17,6 @@ export interface AuthResponse {
   token: string;
   success: boolean;
   message: string;
-  // user?: User;
 }
 
 export interface AuthError {

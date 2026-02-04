@@ -16,7 +16,7 @@ export function CalendarSheet({
 }: Props) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom">
+      <SheetContent side="bottom" className="p-4">
         <SheetHeader>
           <SheetTitle>{date}の活動記録</SheetTitle>
           <SheetDescription>

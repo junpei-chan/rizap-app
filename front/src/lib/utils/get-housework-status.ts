@@ -33,14 +33,14 @@ function calculateDaysSinceLastDone(lastDoneDate: string): number {
  * - 1日前 → 綺麗
  * - 2〜3日前 → 少し汚れている
  * - 4〜5日前 → 汚れている
- * - 6日以上前 → 限界
+ * - 6日以上前 → 限界です
  */
 function getNormalStatus(daysSince: number): HouseworkStatusNormal {
   if (daysSince === 0) return "とても綺麗";
   if (daysSince === 1) return "綺麗";
   if (daysSince >= 2 && daysSince <= 3) return "少し汚れている";
   if (daysSince >= 4 && daysSince <= 5) return "汚れている";
-  return "限界";
+  return "限界です";
 }
 
 /**
@@ -49,14 +49,14 @@ function getNormalStatus(daysSince: number): HouseworkStatusNormal {
  * - 1日前 → 少し溜まっている
  * - 2〜3日前 → 溜まっている
  * - 4〜5日前 → かなり溜まっている
- * - 6日以上前 → 限界
+ * - 6日以上前 → 限界です
  */
 function getLaundryStatus(daysSince: number): HouseworkStatusLaundry {
   if (daysSince === 0) return "完了";
   if (daysSince === 1) return "少し溜まっている";
   if (daysSince >= 2 && daysSince <= 3) return "溜まっている";
   if (daysSince >= 4 && daysSince <= 5) return "かなり溜まっている";
-  return "限界";
+  return "限界です";
 }
 
 /**
@@ -65,14 +65,14 @@ function getLaundryStatus(daysSince: number): HouseworkStatusLaundry {
  * - 1日前 → 少し入っている
  * - 2〜3日前 → 半分くらい
  * - 4〜5日前 → いっぱい
- * - 6日以上前 → 限界
+ * - 6日以上前 → 限界です
  */
 function getTrashStatus(daysSince: number): HouseworkStatusTrash {
   if (daysSince === 0) return "完了";
   if (daysSince === 1) return "少し入っている";
   if (daysSince >= 2 && daysSince <= 3) return "半分くらい";
   if (daysSince >= 4 && daysSince <= 5) return "いっぱい";
-  return "限界";
+  return "限界です";
 }
 
 /**
@@ -81,14 +81,14 @@ function getTrashStatus(daysSince: number): HouseworkStatusTrash {
  * - 1日前 → 少し残っている
  * - 2〜3日前 → 残っている
  * - 4〜5日前 → たまっている
- * - 6日以上前 → 限界
+ * - 6日以上前 → 限界です
  */
 function getOrganizeStatus(daysSince: number): HouseworkStatusOrganize {
   if (daysSince === 0) return "完了";
   if (daysSince === 1) return "少し残っている";
   if (daysSince >= 2 && daysSince <= 3) return "残っている";
   if (daysSince >= 4 && daysSince <= 5) return "たまっている";
-  return "限界";
+  return "限界です";
 }
 
 /**

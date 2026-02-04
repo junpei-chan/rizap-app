@@ -82,7 +82,7 @@
     useEffect(() => {
         if (isFirst && selected !== null) {
             mutate({
-                mealFrequency: selected,
+                meal_frequency: selected, // TODO: バックエンド側でcamelCaseを受け入れるように
             });
 
             setMealFrequency(selected);

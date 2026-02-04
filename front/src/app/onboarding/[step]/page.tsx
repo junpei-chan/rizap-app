@@ -1,18 +1,18 @@
-    "use client";
+"use client";
 
-    import { useUserStore } from "@/stores/user-store";
-    import { useCreateMealFrequency } from "@/hooks/features/meal-frequency";
-    import { useSetupRoom } from "@/hooks/features/housework";
-    import { useEffect, useMemo, useState } from "react";
-    import { useParams, useRouter } from "next/navigation";
-    import { ChevronLeft } from "lucide-react";
+import { useUserStore } from "@/stores/user-store";
+import { useCreateMealFrequency } from "@/hooks/features/meal-frequency";
+import { useSetupRoom } from "@/hooks/features/housework";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
 
-    import { ProgressBar } from "@/components/features/onboarding/progress-bar";
-    import { ButtonWithOption } from "@/components/features/onboarding/button-with-option";
-    import { ButtonWithToNext } from "@/components/features/onboarding/button-with-to-next";
+import { ProgressBar } from "@/components/features/onboarding/progress-bar";
+import { ButtonWithOption } from "@/components/features/onboarding/button-with-option";
+import { ButtonWithToNext } from "@/components/features/onboarding/button-with-to-next";
 
-    import { STEPS } from "@/data/onboarding-steps";
-    import { toRoomData } from "@/lib/utils/to-room-data";
+import { STEPS } from "@/data/onboarding-steps";
+import { toRoomData } from "@/lib/utils/to-room-data";
 
     function readAnswers(): Record<string, string> {
         if (typeof window === "undefined") return {};
@@ -29,7 +29,7 @@
             sessionStorage.setItem("onboarding_answers", JSON.stringify(next));
         }
 
-    export default function OnboardingStepPage() {
+export default function OnboardingStepPage() {
     const { setMealFrequency } = useUserStore();
     const { mutate: createMealFrequency } = useCreateMealFrequency();
     const { mutate: setupRoom } = useSetupRoom();
@@ -118,16 +118,16 @@
     return (
         // 下から54px固定：pb-[54px]
         <div className="min-h-screen flex flex-col pt-10 pb-13.5">
-        {/* 進捗バー（上部） */}
-        <ProgressBar value={progress} />
+            {/* 進捗バー（上部） */}
+            <ProgressBar value={progress} />
 
-        {/* 戻るボタン：進捗バーの下 */}
-        <div className="mt-3.5 h-11 flex items-center">
-            {!isFirst && (
-            <button
-                type="button"
-                onClick={goPrev}
-                className="w-9 h-9 rounded-full bg-white
+            {/* 戻るボタン：進捗バーの下 */}
+            <div className="mt-3.5 h-11 flex items-center">
+                {!isFirst && (
+                    <button
+                        type="button"
+                        onClick={goPrev}
+                        className="w-9 h-9 rounded-full bg-white
                         shadow-[0_2px_6px_rgba(0,0,0,0.20)]
                         flex items-center justify-center"
                 aria-label="戻る"
@@ -164,4 +164,4 @@
         </div>
         </div>
     );
-    }
+}

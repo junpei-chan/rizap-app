@@ -76,7 +76,7 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
       {ROOM_ITEMS.map((item) => (
         <motion.button
           key={item.id}
-          className="absolute cursor-pointer"
+          className="absolute cursor-pointer z-60"
           style={{
             top: item.position.top,
             left: item.position.left,

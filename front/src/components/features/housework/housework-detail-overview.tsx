@@ -51,19 +51,22 @@ export function HouseworkDetailOverview({
         ${IbmPlexSansJpFont.className}
       `}
       style={{
-        background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 20%)'
+        background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 20%)',
+        pointerEvents: 'none'
       }}
     >
       <button
         className="absolute top-10 left-6 flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0px_0px_6px_0px_rgba(0,0,0,0.4)]" 
         onClick={handleOverviewClose}
+        style={{ pointerEvents: 'auto' }}
       >
         <ChevronLeft />
       </button>
       <div
         className="absolute bottom-0 w-full flex flex-col items-center gap-9 pt-35 pb-14"
         style={{
-          background: 'linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, rgba(255, 255, 255, 0) 100%)'
+          background: 'linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, rgba(255, 255, 255, 0) 100%)',
+          pointerEvents: 'auto'
         }}
       >
         <h2 className="text-text text-4xl font-semibold">

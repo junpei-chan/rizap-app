@@ -19,7 +19,7 @@ export const calenderReponseSchema = z.object({
 });
 
 export const calenderDateRequestSchema = z.object({
-  date: z.number().int(),
+  date: z.string(), // YYYY-MM-DD形式
 });
 
 export type CalenderRequest = z.infer<typeof calenderRequestSchema>;
@@ -27,9 +27,13 @@ export type CalenderResponse = z.infer<typeof calenderReponseSchema>;
 
 export type CalenderDateRequest = z.infer<typeof calenderDateRequestSchema>;
 export type CalenderDateResponse = {
-  houseworkName: string;
-  calorie: number;
-  doneAt: string;
+  date: string;
+  totalCalorie: number;
+  logs: Array<{
+    houseworkName: string;
+    calorie: number;
+    doneAt: string;
+  }>;
 }
 
 // Store用の型

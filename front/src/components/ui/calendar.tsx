@@ -6,6 +6,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react"
+import { formatDateToYMD } from "@/lib/utils/"
 import {
   DayPicker,
   getDefaultClassNames,
@@ -199,15 +200,7 @@ function CalendarDayButton({
     if (modifiers.focused) ref.current?.focus()
   }, [modifiers.focused])
 
-  // ローカル時間で YYYY-MM-DD 形式にフォーマット
-  const formatLocalDate = (date: Date) => {
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  }
-
-  const formattedDate = formatLocalDate(day.date)
+  const formattedDate = formatDateToYMD(day.date)
   const hasHousework = houseworkDates?.has(formattedDate)
 
   return (

@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
 import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
-import { calculateTimeDifference, getHouseworkStatusById, getHouseworkDatesFromCalendar } from "@/lib/utils/";
+import { calculateTimeDifference, getHouseworkStatusById, getHouseworkDatesFromCalendar, formatDateToYMD } from "@/lib/utils/";
 import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
@@ -15,19 +15,30 @@ import { useHouseworkStore } from "@/stores/housework-store";
 export default function App() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { data: housework } = useGetHousework(
-    selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
-  );
   const { mutate: startHousework } = useStartHousework();
   const { mutate: endHousework } = useEndHousework();
   const { isHouseworkRunning } = useHouseworkStore();
+
+  const [selectedDateString, setSelectedDateString] = useState<string>(
+    formatDateToYMD(new Date())
+  );
+  const { data: housework } = useGetHousework(
+    selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
+  );
   const { data: calenderData } = useGetCalender({
     year: date?.getFullYear() ?? new Date().getFullYear(),
     month: (date?.getMonth() ?? new Date().getMonth()) + 1,
   });
   const { data: calenderDate } = useGetCalenderDate({
-    date: 
+    date: selectedDateString,
   });
+
+  const handleDateSelect = (newDate: Date | undefined) => {
+    setDate(newDate);
+    if (newDate) {
+      setSelectedDateString(formatDateToYMD(newDate));
+    }
+  };
 
   const houseworkDates = useMemo(
     () => getHouseworkDatesFromCalendar(calenderData),
@@ -49,6 +60,8 @@ export default function App() {
       calorie: calorie,
     });
   };
+
+  console.log(calenderDate);
 
   return (
     <main>
@@ -119,7 +132,7 @@ export default function App() {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleDateSelect}
           houseworkDates={houseworkDates}
         />
       </div>

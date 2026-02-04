@@ -29,7 +29,7 @@ export const useGetCalenderDate = (params: CalenderDateRequest) => {
   const { data, isSuccess, isError, error } = useQuery({
     queryKey: ["calenderDate", params],
     queryFn: () => calenderService.getCalenderDate(params),
-    enabled: !!params.date,
+    enabled: !!params.date && params.date.length > 0,
   });
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
 import { IBM_Plex_Sans_JP } from "next/font/google";
 import { ButtonWithHousework } from "@/components/features/housework";
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import type { HouseworkResponse } from "@/types/housework-base.types";
 
 type Props = {

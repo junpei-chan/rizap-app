@@ -131,18 +131,20 @@ export default function App() {
         </div>
       )}
 
-      {calenderDate?.date && (
-        <CalendarSheet 
-          date={calenderDate.date}
-          totalCalorie={calenderDate.totalCalorie}
-          logs={calenderDate.logs.map((log) => ({
-            ...log,
-            doneAt: formatDateToYMDHMS(new Date(log.doneAt))
-          }))}
-          isOpen={isSheetOpen}
-          onOpenChange={setIsSheetOpen}
-        />
-      )}
+      <AnimatePresence>
+        {calenderDate?.date && isSheetOpen && (
+          <CalendarSheet 
+            date={calenderDate.date}
+            totalCalorie={calenderDate.totalCalorie}
+            logs={calenderDate.logs.map((log) => ({
+              ...log,
+              doneAt: formatDateToYMDHMS(new Date(log.doneAt))
+            }))}
+            isOpen={isSheetOpen}
+            onOpenChange={setIsSheetOpen}
+          />
+        )}
+      </AnimatePresence>
     </main>
   )
 }

@@ -222,8 +222,8 @@ function CalendarDayButton({
         "dark:hover:text-accent-foreground",
         "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px]",
         !hasHousework && !isToday && defaultClassNames.day,
-        hasHousework && !isToday && "!bg-[#E57E57] hover:!bg-[#E57E57]/90 !text-white !rounded-full !border-0",
-        isToday && "!bg-transparent !border-2 !border-[#E57E57] !rounded-full !text-[#E57E57] font-medium hover:!bg-[#E57E57]/10",
+        hasHousework && !isToday && "bg-[#E57E57]! hover:bg-[#E57E57]/90! text-white! rounded-full! border-0!",
+        isToday && "bg-transparent! border-2! border-[#E57E57]! rounded-full! text-[#E57E57]! font-medium hover:bg-[#E57E57]/10!",
         className
       )}
       {...props}

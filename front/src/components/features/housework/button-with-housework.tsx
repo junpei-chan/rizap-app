@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui";
 import { Play, X } from "lucide-react";
 import { getHouseworkGradient, getHouseworkShadow } from "@/lib/utils/";
+import { motion } from "framer-motion";
 
 interface Props {
   isRunning: boolean;
@@ -26,12 +27,20 @@ export function ButtonWithHousework({
           ${gradient} ${shadow}
         `}
         onClick={onStart}
+        asChild
       >
-        <Play 
-          className="size-6"
-          color="white"
-        />
-        作業開始
+        <motion.button
+          whileTap={{ scale: 0.85 }}
+          transition={{
+            duration: 0.1,
+          }}
+        >
+          <Play 
+            className="size-6"
+            color="white"
+          />
+          作業開始
+        </motion.button>
       </Button>
     ) : (
       <Button 
@@ -40,12 +49,20 @@ export function ButtonWithHousework({
           ${gradient} ${shadow}
         `}
         onClick={onEnd}
+        asChild
       >
-        <X 
-          className="size-6"
-          color="white"
-        />
-        作業終了
+        <motion.button
+          whileTap={{ scale: 0.85 }}
+          transition={{
+            duration: 0.1,
+          }}
+        >
+          <X 
+            className="size-6"
+            color="white"
+          />
+          作業終了
+        </motion.button>
       </Button>
     )
   )

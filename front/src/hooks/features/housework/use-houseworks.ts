@@ -8,6 +8,7 @@ import { useHouseworkStore } from "@/stores/housework-store";
 export const useGetHousework = (params?: HouseworkRequest) => {
   const startHousework = useHouseworkStore((state) => state.startHousework);
   const endHousework = useHouseworkStore((state) => state.endHousework);
+  const runningHouseworkId = useHouseworkStore((state) => state.runningHouseworkId);
 
   const query = useQuery({
     queryKey: ["housework", params?.houseworkId],
@@ -17,14 +18,18 @@ export const useGetHousework = (params?: HouseworkRequest) => {
   });
 
   useEffect(() => {
-    if (query.data) {
-      if (query.data.status === "running" && params?.houseworkId) {
+    if (query.data && params?.houseworkId) {
+      // サーバーの状態とローカルの状態が異なる場合のみ同期
+      const isServerRunning = query.data.status === "running";
+      const isLocalRunning = runningHouseworkId === params.houseworkId;
+      
+      if (isServerRunning && !isLocalRunning) {
         startHousework(params.houseworkId);
-      } else if (query.data.status === "stopped") {
+      } else if (!isServerRunning && isLocalRunning) {
         endHousework();
       }
     }
-  }, [query.data, params?.houseworkId, startHousework, endHousework]);
+  }, [query.data, params?.houseworkId, startHousework, endHousework, runningHouseworkId]);
 
   return query;
 };
@@ -58,14 +63,21 @@ export const useEndHousework = () => {
 
   return useMutation ({
     mutationFn: (params: HouseworkRequest) => HouseworkService.endHousework(params),
-    onSuccess: (_, variables) => {
+    onMutate: async () => {
+      // 楽観的更新: API リクエスト前に即座に状態を更新
       endHousework();
+    },
+    onSuccess: async (_, variables) => {
       // React Query のキャッシュを無効化して再フェッチ
-      queryClient.invalidateQueries({ queryKey: ["housework", variables.houseworkId] });
+      await queryClient.invalidateQueries({ queryKey: ["housework", variables.houseworkId] });
+      await queryClient.invalidateQueries({ queryKey: ["calender"] });
+      await queryClient.invalidateQueries({ queryKey: ["calenderDate"] });
       console.log("家事の終了に成功しました");
     },
-    onError: (error: ApiError) => {
+    onError: (error: ApiError, variables) => {
       console.error("家事の終了に失敗しました :", error.message);
+      // エラー時は状態を元に戻す
+      queryClient.invalidateQueries({ queryKey: ["housework", variables.houseworkId] });
     },
   });
 };

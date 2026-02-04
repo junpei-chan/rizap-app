@@ -1,51 +1,48 @@
 import { useQuery } from "@tanstack/react-query";
 import { calenderService } from "@/services/calender/calender-service";
 import { CalenderRequest, CalenderDateRequest } from "@/types/calender.types";
-import { useCalenderStore } from "@/stores/calender-store";
 import { useEffect } from "react";
 
 export const useGetCalender = (params: CalenderRequest) => {
-  const { setCalenderData } = useCalenderStore();
-
   const { data, isSuccess, isError, error } = useQuery({
-    queryKey: ["calender"],
+    queryKey: ["calender", params],
     queryFn: () => calenderService.getCalender(params),
-    enabled: !!params,
+    enabled: !!params.houseworkId,
   });
 
   useEffect(() => {
     if (isSuccess && data) {
-      setCalenderData(data); // Zustandストア更新
       console.log("カレンダーデータの取得に成功しました");
-    };
-  });
+    }
+  }, [isSuccess, data]);
 
   useEffect(() => {
     if (isError && error) {
       console.error("カレンダーデータの取得に失敗しました :", error.message);
-    };
-  });
+    }
+  }, [isError, error]);
+
+  return { data, isSuccess, isError, error };
 };
 
 export const useGetCalenderDate = (params: CalenderDateRequest) => {
-  const { setSelectedDate } = useCalenderStore();
-
   const { data, isSuccess, isError, error } = useQuery({
-    queryKey: ["calenderDate"],
+    queryKey: ["calenderDate", params],
     queryFn: () => calenderService.getCalenderDate(params),
-    enabled: !!params,
+    enabled: !!params.date,
   });
 
   useEffect(() => {
     if (isSuccess && data) {
-      setSelectedDate(data); // Zustandストア更新
       console.log("日付ごとのカレンダーデータ取得に成功しました");
-    };
-  });
+    }
+  }, [isSuccess, data]);
 
   useEffect(() => {
     if (isError && error) {
       console.error("日付ごとのカレンダーデータ取得に失敗しました :", error.message);
-    };
-  });
+    }
+  }, [isError, error]);
+
+  return { data, isSuccess, isError, error };
 };

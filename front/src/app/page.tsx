@@ -20,10 +20,11 @@ export default function App() {
   const { mutate: startHousework } = useStartHousework();
   const { mutate: endHousework } = useEndHousework();
   const { isHouseworkRunning } = useHouseworkStore();
-  // const { data } = useGetCalender({
-  //   year: date?.getFullYear(),
-  //   month: 
-  // });
+  const { data: calenderData } = useGetCalender({
+    year: date?.getFullYear() ?? new Date().getFullYear(),
+    month: (date?.getMonth() ?? new Date().getMonth()) + 1,
+    houseworkId: selectedId ?? "",
+  });
 
   const handleHouseworkStart = (id: number) => {
     startHousework({

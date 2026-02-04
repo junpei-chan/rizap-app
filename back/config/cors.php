@@ -18,7 +18,7 @@ return [
   'allowed_methods' => ['*'],
 
   'allowed_origins' => [
-    env('FRONTEND_URL', 'https://rizap-app.vercel.app/'),
+    env('FRONTEND_URL', 'https://rizap-app.vercel.app'),
   ],
 
   'allowed_origins_patterns' => [],

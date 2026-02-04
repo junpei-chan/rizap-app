@@ -7,7 +7,7 @@ export const useGetCalender = (params: CalenderRequest) => {
   const { data, isSuccess, isError, error } = useQuery({
     queryKey: ["calender", params],
     queryFn: () => calenderService.getCalender(params),
-    enabled: !!params.houseworkId,
+    enabled: !!params,
   });
 
   useEffect(() => {

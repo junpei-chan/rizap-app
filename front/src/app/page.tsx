@@ -23,7 +23,6 @@ export default function App() {
   const { data: calenderData } = useGetCalender({
     year: date?.getFullYear() ?? new Date().getFullYear(),
     month: (date?.getMonth() ?? new Date().getMonth()) + 1,
-    houseworkId: selectedId ?? "",
   });
 
   const handleHouseworkStart = (id: number) => {

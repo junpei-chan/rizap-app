@@ -3,7 +3,6 @@ import { z } from "zod";
 export const calenderRequestSchema = z.object({
   year: z.number().int(),
   month: z.number().int(),
-  houseworkId: z.string(),
 });
 
 export const calenderReponseSchema = z.object({

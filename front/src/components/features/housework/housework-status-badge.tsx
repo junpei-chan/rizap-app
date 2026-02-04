@@ -1,6 +1,9 @@
+// Create by Github Copilot!!
+
 "use client";
 
 import { getHouseworkStatus, getHouseworkStatusById } from "@/lib/utils/";
+import { ThumbsUp, Smile, Frown, ThumbsDown, TriangleAlert, CircleQuestionMark } from "lucide-react";
 import type { HouseworkStatus } from "@/types/housework.types";
 import { cn } from "@/lib/utils";
 
@@ -16,10 +19,10 @@ interface HouseworkStatusBadgeProps {
 /**
  * 状態に対応するアイコンを取得
  */
-function getStatusIcon(status: HouseworkStatus): string {
+function getStatusIcon(status: HouseworkStatus) {
   // 完了系
   if (status === "完了" || status === "とても綺麗") {
-    return "👍";
+    return <ThumbsUp />;
   }
   
   // レベル2（少し系、綺麗）
@@ -30,7 +33,7 @@ function getStatusIcon(status: HouseworkStatus): string {
     status === "少し残っている" ||
     status === "少し汚れている"
   ) {
-    return "😊";
+    return <Smile />;
   }
   
   // レベル3（中間系）
@@ -39,7 +42,7 @@ function getStatusIcon(status: HouseworkStatus): string {
     status === "半分くらい" ||
     status === "残っている"
   ) {
-    return "😐";
+    return <Frown />;
   }
   
   // レベル4（かなり系、汚れている）
@@ -49,15 +52,15 @@ function getStatusIcon(status: HouseworkStatus): string {
     status === "たまっている" ||
     status === "汚れている"
   ) {
-    return "👎";
+    return <ThumbsDown />;
   }
   
   // 限界
   if (status === "限界") {
-    return "⚠️";
+    return <TriangleAlert />;
   }
   
-  return "❓";
+  return <CircleQuestionMark />;
 }
 
 /**
@@ -66,7 +69,7 @@ function getStatusIcon(status: HouseworkStatus): string {
 function getStatusColorClass(status: HouseworkStatus): string {
   // 完了系 - 緑
   if (status === "完了" || status === "とても綺麗") {
-    return "text-green-600 bg-green-50 border-green-200";
+    return "text-[#66E08B]";
   }
   
   // レベル2 - 青
@@ -77,7 +80,7 @@ function getStatusColorClass(status: HouseworkStatus): string {
     status === "少し残っている" ||
     status === "少し汚れている"
   ) {
-    return "text-blue-600 bg-blue-50 border-blue-200";
+    return "text-[#108FFF]";
   }
   
   // レベル3 - オレンジ
@@ -86,7 +89,7 @@ function getStatusColorClass(status: HouseworkStatus): string {
     status === "半分くらい" ||
     status === "残っている"
   ) {
-    return "text-orange-600 bg-orange-50 border-orange-200";
+    return "text-[#FFC267]";
   }
   
   // レベル4 - 赤（薄め）
@@ -96,15 +99,15 @@ function getStatusColorClass(status: HouseworkStatus): string {
     status === "たまっている" ||
     status === "汚れている"
   ) {
-    return "text-red-600 bg-red-50 border-red-200";
+    return "text-[#FF754F]";
   }
   
   // 限界 - 赤（濃いめ）
   if (status === "限界") {
-    return "text-red-700 bg-red-100 border-red-300";
+    return "text-[#FF6453]";
   }
   
-  return "text-gray-600 bg-gray-50 border-gray-200";
+  return "text-gray-600";
 }
 
 /**
@@ -130,7 +133,7 @@ export function HouseworkStatusBadge({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 px-3 py-1.5 rounded-full border font-medium text-sm transition-colors",
+        "inline-flex items-center gap-2 px-3 py-1.5 font-medium transition-colors",
         colorClass,
         className
       )}

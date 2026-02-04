@@ -8,7 +8,7 @@ export const roomRequestSchema = z.array( // 配列形式
 );
 
 export const houseworkRequestSchema = z.object({
-  houseworkId: z.string().max(1),
+  houseworkId: z.number().int().max(1),
 });
 
 export const houseworkResponseSchema = z.object({
@@ -18,7 +18,7 @@ export const houseworkResponseSchema = z.object({
 });
 
 export const houseworkStartRequestSchema = z.object({
-  housework: z.string(),
+  houseworkId: z.number().int(),
 });
 
 export type RoomRequest = z.infer<typeof roomRequestSchema>;

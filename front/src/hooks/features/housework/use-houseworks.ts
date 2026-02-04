@@ -19,11 +19,7 @@ export const useStartHousework = () => {
   return useMutation({
     mutationFn: (housework: HouseworkStartRequest) => HouseworkService.startHousework(housework),
     onSuccess: (_, variables) => {
-      const houseworkId = parseInt(variables.housework, 10);
-
-      if (!isNaN(houseworkId)) {
-        startHousework(houseworkId);
-      }
+      startHousework(variables.houseworkId);
       console.log("家事の開始に成功しました");
     },
     onError: (error: ApiError) => {

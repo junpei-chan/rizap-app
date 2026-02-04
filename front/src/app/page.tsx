@@ -3,15 +3,25 @@
 import { useState } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button } from "@/components/ui";
-import { useGetHousework } from "@/hooks/features/housework";
+import { Play } from "lucide-react";
+import { useGetHousework, useStartHousework } from "@/hooks/features/housework";
 import { calculateTimeDifference } from "@/lib/utils/";
 import { HouseworkStatusBadge } from "@/components/features/housework";
+import { useHouseworkStore } from "@/stores/housework-store";
 
 export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { data: housework, isLoading, error } = useGetHousework(
-    selectedId ? { houseworkId: selectedId } : undefined
+    selectedId ? { houseworkId: Number(selectedId) } : undefined
   );
+  const { mutate: startHousework } = useStartHousework();
+  const { isHouseworkRunning } = useHouseworkStore();
+
+  const handleHouseworkStart = (id: number) => {
+    startHousework({
+      houseworkId: id,
+    });
+  }
 
   return (
     <main>
@@ -39,6 +49,18 @@ export default function App() {
                 <h2>
                   {HOMEWORK_ITEMS[Number(housework.houseworkId) - 1].label}
                 </h2>
+                <Button
+                  className="border"
+                  onClick={() => handleHouseworkStart(Number(housework.houseworkId))}
+                >
+                  {isHouseworkRunning() && (
+                    <>
+                      <Play />
+                      作業開始
+                    </>
+                  )}
+                  
+                </Button>
                 <div>
                   <h3>最後に作業した日</h3>
                   <p>{label}</p>

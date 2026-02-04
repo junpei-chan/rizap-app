@@ -10,7 +10,7 @@ export const HOMEWORK_ITEMS: HomeworkItemsType[] = [
   },
   {
     id: "2",
-    label: "洗濯"
+    label: "洗濯物"
   },
   {
     id: "3",

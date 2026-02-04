@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button, Calendar } from "@/components/ui";
 import { CalendarSheet } from "@/components/features/calendar";
@@ -13,26 +13,35 @@ import { HouseworkStatusBadge } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
 
 export default function App() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [date, setDate] = useState<Date | undefined>(undefined)
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { mutate: startHousework } = useStartHousework();
   const { mutate: endHousework } = useEndHousework();
   const { isHouseworkRunning } = useHouseworkStore();
 
-  const [selectedDateString, setSelectedDateString] = useState<string>(
-    formatDateToYMD(new Date())
-  );
+  const [selectedDateString, setSelectedDateString] = useState<string>("");
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const now = new Date();
+    setDate(now);
+    setSelectedDateString(formatDateToYMD(now));
+  }, []);
+
   const { data: housework } = useGetHousework(
     selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
   );
-  const { data: calenderData } = useGetCalender({
-    year: date?.getFullYear() ?? new Date().getFullYear(),
-    month: (date?.getMonth() ?? new Date().getMonth()) + 1,
-  });
-  const { data: calenderDate } = useGetCalenderDate({
-    date: selectedDateString,
-  });
+  const { data: calenderData } = useGetCalender(
+    date ? {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+    } : undefined
+  );
+  const { data: calenderDate } = useGetCalenderDate(
+    selectedDateString ? { date: selectedDateString } : undefined
+  );
 
   const handleDateSelect = (newDate: Date | undefined) => {
     setDate(newDate);
@@ -131,12 +140,14 @@ export default function App() {
 
       <div>
         <h2>Total Calorie: {calenderData?.totalCalorie}</h2>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleDateSelect}
-          houseworkDates={houseworkDates}
-        />
+        {isMounted && (
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleDateSelect}
+            houseworkDates={houseworkDates}
+          />
+        )}
       </div>
 
       {calenderDate?.date && (

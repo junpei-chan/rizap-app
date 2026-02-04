@@ -5,6 +5,7 @@ import { HOMEWORK_ITEMS } from "@/data/homework-items"
 import { Button, Calendar } from "@/components/ui";
 import { Play, X } from "lucide-react";
 import { useGetHousework, useStartHousework, useEndHousework } from "@/hooks/features/housework";
+import { useGetCalender, useGetCalenderDate } from "@/hooks/features/calender/use-calenders";
 import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
 import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
@@ -13,12 +14,16 @@ import { useHouseworkStore } from "@/stores/housework-store";
 export default function App() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { data: housework, isLoading, error } = useGetHousework(
+  const { data: housework } = useGetHousework(
     selectedId ? { houseworkId: Number(selectedId), calorie: 0 } : undefined
   );
   const { mutate: startHousework } = useStartHousework();
   const { mutate: endHousework } = useEndHousework();
   const { isHouseworkRunning } = useHouseworkStore();
+  // const { data } = useGetCalender({
+  //   year: date?.getFullYear(),
+  //   month: 
+  // });
 
   const handleHouseworkStart = (id: number) => {
     startHousework({
@@ -52,8 +57,6 @@ export default function App() {
 
       {selectedId && (
         <div className="mt-4">
-          {isLoading && <p>読み込み中...</p>}
-          {error && <p>エラーが発生しました</p>}
           {housework && (() => {
             const label = calculateTimeDifference(housework.doneAt); // 最後に作業した日
             const status = getHouseworkStatusById(housework.doneAt, housework.houseworkId); // 現在の状態

@@ -14,7 +14,7 @@ export const houseworkRequestSchema = z.object({
 export const houseworkResponseSchema = z.object({
   houseworkId: z.string().min(1),
   status: z.string(),
-
+  doneAt: z.string(),
 });
 
 export const houseworkStartRequestSchema = z.object({
@@ -23,4 +23,5 @@ export const houseworkStartRequestSchema = z.object({
 
 export type RoomRequest = z.infer<typeof roomRequestSchema>;
 export type HouseworkRequest = z.infer<typeof houseworkRequestSchema>;
+export type HouseworkResponse = z.infer<typeof houseworkResponseSchema>;
 export type HouseworkStartRequest = z.infer<typeof houseworkStartRequestSchema>;

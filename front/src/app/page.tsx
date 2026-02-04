@@ -29,8 +29,8 @@ export default function App() {
           {error && <p>エラーが発生しました</p>}
           {housework && (
             <div>
-              <h2>{housework.doneAt}</h2>
-              <p>消費カロリー: {housework} kcal</p>
+              <h2></h2>
+              <p></p>
             </div>
           )}
         </div>

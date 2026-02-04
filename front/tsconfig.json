@@ -15,6 +15,7 @@
     "incremental": true,
     "verbatimModuleSyntax": false,
     "importsNotUsedAsValues": "remove",
+    "assumeChangesOnlyAffectDirectDependencies": true,
     "plugins": [
       {
         "name": "next"
@@ -35,8 +36,11 @@
     "node_modules",
     "../back",
     "../docs",
+    "../.github",
+    "../.git",
     ".next",
     "out",
-    "dist"
+    "dist",
+    "build"
   ]
 }

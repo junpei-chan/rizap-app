@@ -5,17 +5,22 @@
   "typescript.tsserver.experimental.enableProjectDiagnostics": false,
   "typescript.preferences.includePackageJsonAutoImports": "off",
   "typescript.updateImportsOnFileMove.enabled": "never",
+  "typescript.tsserver.useSyntaxServer": "auto",
+  "typescript.enablePromptUseWorkspaceTsdk": false,
   
   // ファイル監視の除外設定
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
+    "**/.git/**": true,
     "**/node_modules/**": true,
     "**/.next/**": true,
     "**/out/**": true,
     "**/dist/**": true,
     "../back/**": true,
-    "../docs/**": true
+    "../docs/**": true,
+    "../.github/**": true,
+    "../.git/**": true
   },
   
   // 検索対象の除外設定
@@ -24,8 +29,13 @@
     "**/.next": true,
     "**/out": true,
     "**/dist": true,
-    "../back": true
+    "../back": true,
+    "../.github": true
   },
+  
+  // TypeScriptの対象プロジェクトを明示的に制限
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   
   // ファイル除外設定
   "files.exclude": {

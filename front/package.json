@@ -37,6 +37,7 @@
     "eslint-config-next": "^16.1.6",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
+    "framer-motion": "^12.31.0",
     "i": "^0.3.7",
     "js-cookie": "^3.0.5",
     "msw": "^2.12.7",

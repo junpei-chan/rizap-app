@@ -26,23 +26,11 @@ export const useGetCalender = (params: CalenderRequest | undefined) => {
 };
 
 export const useGetCalenderDate = (params: CalenderDateRequest | undefined) => {
-  const { data, isSuccess, isError, error } = useQuery({
+  const { data, isSuccess, isError, error, isLoading, isFetching } = useQuery({
     queryKey: ["calenderDate", params],
     queryFn: () => calenderService.getCalenderDate(params!),
     enabled: !!params?.date && params.date.length > 0,
   });
 
-  useEffect(() => {
-    if (isSuccess && data) {
-      console.log("日付ごとのカレンダーデータ取得に成功しました");
-    }
-  }, [isSuccess, data]);
-
-  useEffect(() => {
-    if (isError && error) {
-      console.error("日付ごとのカレンダーデータ取得に失敗しました :", error.message);
-    }
-  }, [isError, error]);
-
-  return { data, isSuccess, isError, error };
+  return { data, isSuccess, isError, error, isLoading, isFetching };
 };

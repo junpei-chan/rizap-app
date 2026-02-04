@@ -7,6 +7,7 @@ import { Flame, X } from "lucide-react";
 type Props = CalenderDateResponse & {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  isLoading?: boolean;
 };
 
 export function CalendarSheet({
@@ -15,7 +16,10 @@ export function CalendarSheet({
   logs,
   isOpen,
   onOpenChange,
+  isLoading = false,
 }: Props) {
+  console.log('CalendarSheet render:', { isOpen, isLoading, logsCount: logs.length, totalCalorie });
+  
   if (!isOpen) return null;
 
   return (
@@ -77,6 +81,11 @@ export function CalendarSheet({
           合計消費カロリー: {totalCalorie} kcal
         </motion.h2>
 
+        {isLoading ? (
+          <div className="w-full h-40 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF6201]" />
+          </div>
+        ) : (
         <div className="flex flex-col items-center gap-2">
           {logs.length === 0 ? (
             <motion.div
@@ -104,7 +113,7 @@ export function CalendarSheet({
               className="w-full flex justify-center"
             >
               <Item 
-                className="flex justify-around w-88 shadow-[0_4px_4px_rgba(133,122,255,0.25)]"
+                className="relative flex justify-around w-88 shadow-[0_4px_4px_rgba(133,122,255,0.25)]"
               >
                 <ItemContent>
                   {formatDoneAtToTime(log.doneAt)}
@@ -147,6 +156,7 @@ export function CalendarSheet({
             ))
           )}
         </div>
+        )}
         </motion.div>
       </div>
     </motion.div>

@@ -25,10 +25,12 @@ function Calendar({
   formatters,
   components,
   houseworkDates,
+  onDayClick,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
   houseworkDates?: Set<string>
+  onDayClick?: (date: Date) => void
 }) {
   const defaultClassNames = getDefaultClassNames()
 
@@ -163,7 +165,7 @@ function Calendar({
           )
         },
         DayButton: (props) => (
-          <CalendarDayButton {...props} houseworkDates={houseworkDates} />
+          <CalendarDayButton {...props} houseworkDates={houseworkDates} onDayClick={onDayClick} />
         ),
         WeekNumber: ({ children, ...props }) => {
           return (
@@ -186,9 +188,11 @@ function CalendarDayButton({
   day,
   modifiers,
   houseworkDates,
+  onDayClick,
   ...props
 }: React.ComponentProps<typeof DayButton> & {
   houseworkDates?: Set<string>
+  onDayClick?: (date: Date) => void
 }) {
   const defaultClassNames = getDefaultClassNames()
 
@@ -200,6 +204,17 @@ function CalendarDayButton({
   const formattedDate = formatDateToYMD(day.date)
   const hasHousework = houseworkDates?.has(formattedDate)
   const isToday = modifiers.today
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // 元々のonClickを呼び出す
+    if (props.onClick) {
+      props.onClick(e)
+    }
+    // カスタムハンドラも呼び出す（選択済みでも発火）
+    if (onDayClick && !modifiers.disabled && !modifiers.outside) {
+      onDayClick(day.date)
+    }
+  }
 
   return (
     <Button
@@ -226,6 +241,7 @@ function CalendarDayButton({
         isToday && "bg-transparent! border-2! border-[#E57E57]! rounded-full! text-[#E57E57]! font-medium hover:bg-[#E57E57]/10!",
         className
       )}
+      onClick={handleClick}
       {...props}
     >
       <span className={cn(hasHousework && !isToday && "text-white font-medium", isToday && "text-[#E57E57] font-medium")}>{day.date.getDate()}</span>

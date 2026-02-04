@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { HOMEWORK_ITEMS } from "@/data/homework-items";
-import { Button, Calendar } from "@/components/ui";
+import { Calendar } from "@/components/ui";
 import { Flame } from "lucide-react";
 import { CalendarSheet } from "@/components/features/calendar";
 import { ClickableRoom } from "@/components/features/room";
@@ -12,8 +11,10 @@ import { getHouseworkDatesFromCalendar, formatDateToYMD, formatDateToYMDHMS } fr
 import { HouseworkDetailOverview } from "@/components/features/housework";
 import { useHouseworkStore } from "@/stores/housework-store";
 import { AnimatePresence } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function App() {
+  const queryClient = useQueryClient();
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -40,14 +41,21 @@ export default function App() {
       month: date.getMonth() + 1,
     } : undefined
   );
-  const { data: calenderDate } = useGetCalenderDate(
+  const { data: calenderDate, isLoading: isDateLoading, isFetching: isDateFetching } = useGetCalenderDate(
     selectedDateString ? { date: selectedDateString } : undefined
   );
 
   const handleDateSelect = (newDate: Date | undefined) => {
-    setDate(newDate);
-    if (newDate) {
-      setSelectedDateString(formatDateToYMD(newDate));
+    // undefined（選択解除）の場合は現在の日付を使用
+    const targetDate = newDate ?? date;
+    
+    setDate(targetDate);
+    if (targetDate) {
+      const dateStr = formatDateToYMD(targetDate);
+
+      setSelectedDateString(dateStr);
+      // 同じ日付でも確実に再フェッチするためキャッシュを無効化
+      queryClient.invalidateQueries({ queryKey: ["calenderDate", { date: dateStr }] });
       setIsSheetOpen(true);
     }
   };
@@ -116,24 +124,32 @@ export default function App() {
               mode="single"
               selected={date}
               onSelect={handleDateSelect}
+              onDayClick={handleDateSelect}
               houseworkDates={houseworkDates}
             />
           )}
         </div>
       )}
 
-      {calenderDate?.date && (
-        <CalendarSheet 
-          date={calenderDate.date}
-          totalCalorie={calenderDate.totalCalorie}
-          logs={calenderDate.logs.map((log) => ({
-            ...log,
-            doneAt: formatDateToYMDHMS(new Date(log.doneAt))
-          }))}
-          isOpen={isSheetOpen}
-          onOpenChange={setIsSheetOpen}
-        />
-      )}
+      <AnimatePresence>
+        {isSheetOpen && (() => {
+          const sheetIsLoading = isDateLoading || isDateFetching;
+
+          return (
+            <CalendarSheet 
+              date={calenderDate?.date ?? selectedDateString}
+              totalCalorie={calenderDate?.totalCalorie ?? 0}
+              logs={calenderDate?.logs?.map((log) => ({
+                ...log,
+                doneAt: formatDateToYMDHMS(new Date(log.doneAt))
+              })) ?? []}
+              isOpen={isSheetOpen}
+              onOpenChange={setIsSheetOpen}
+              isLoading={sheetIsLoading}
+            />
+          );
+        })()}
+      </AnimatePresence>
     </main>
   )
 }

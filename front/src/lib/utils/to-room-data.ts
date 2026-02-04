@@ -20,8 +20,8 @@ export function toRoomData(answers: Record<string, number>) {
       doneAt.setDate(doneAt.getDate() - daysAgoNum);
 
       return {
-        homeworkId: houseworkId,
-        doneAt: doneAt.getTime(),
+        homework_id: houseworkId,
+        done_at: doneAt.toISOString(),
       };
     })
 }

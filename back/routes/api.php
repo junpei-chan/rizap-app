@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
-use App\Http\Controllers\HomeworkController;
+use App\Http\Controllers\HouseworkController;
 use App\Http\Controllers\CalendarController;
 
 Route::get('/user', function (Request $request) {
@@ -26,9 +26,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/room', [RoomController::class, 'store']);
 
     Route::prefix('housework')->group(function () {
-        Route::get('/', [HomeworkController::class, 'index']);
-        Route::patch('start', [HomeworkController::class, 'store']);
-        Route::patch('end', [HomeworkController::class, 'update']);
+        Route::get('/', [HouseworkController::class, 'index']);
+        Route::patch('start', [HouseworkController::class, 'store']);
+        Route::patch('end', [HouseworkController::class, 'update']);
     });
 
     Route::prefix('calendar')->group(function () {

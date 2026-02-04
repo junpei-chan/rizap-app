@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\HouseworkLog;
 
-class HomeworkController extends Controller
+class HouseworkController extends Controller
 {
     public function index(Request $request)
     {

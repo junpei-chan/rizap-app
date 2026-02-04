@@ -30,7 +30,7 @@ export function toRoomData(answers: Record<string, number>) {
       const mysqlFormat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
       return {
-        homework_id: houseworkId,
+        housework_id: houseworkId,
         done_at: mysqlFormat,
       };
     });

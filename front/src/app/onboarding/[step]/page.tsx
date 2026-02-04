@@ -2,7 +2,7 @@
 
     import { useUserStore } from "@/stores/user-store";
     import { useCreateMealFrequency } from "@/hooks/features/meal-frequency";
-    import { useSetupRoom } from "@/hooks/features/homework";
+    import { useSetupRoom } from "@/hooks/features/housework";
     import { useEffect, useMemo, useState } from "react";
     import { useParams, useRouter } from "next/navigation";
     import { ChevronLeft } from "lucide-react";
@@ -105,7 +105,7 @@
         });
     }
 
-    const handleAnswersSubmit = (roomData: { homework_id: number; done_at: string }[]) => {
+    const handleAnswersSubmit = (roomData: { housework_id: number; done_at: string }[]) => {
         setupRoom(roomData);
     }
 

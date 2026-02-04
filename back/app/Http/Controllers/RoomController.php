@@ -20,7 +20,7 @@ class RoomController extends Controller
         $data = $request->all();
 
         $validated = validator($data, [
-            '*.homework_id' => 'required|integer|exists:houseworks,id',
+            '*.housework_id' => 'required|integer|exists:houseworks,id',
             '*.done_at'     => 'nullable|date',
         ])->validate();
 
@@ -28,7 +28,7 @@ class RoomController extends Controller
             HouseworkLog::updateOrCreate(
                 [
                     'user_id'      => $user->id,
-                    'housework_id' => $item['homework_id'], 
+                    'housework_id' => $item['housework_id'], 
                 ],
                 [
                     'done_at' => $item['done_at'],

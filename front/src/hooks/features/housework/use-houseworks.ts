@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { HomeworkService } from "@/services/homework/homework-service";
-import { HomeworkRequest, HomeworkStartRequest } from "@/types/homework.types";
+import { HouseworkService } from "@/services/housework/housework-service";
+import { HouseworkRequest, HouseworkStartRequest } from "@/types/housework.types";
 import { ApiError } from "@/types/api.types";
 
-export const useGetHomework = () => {
+export const useGetHousework = () => {
   return useMutation({
-    mutationFn: (params?: HomeworkRequest) => HomeworkService.getHomework(params),
+    mutationFn: (params?: HouseworkRequest) => HouseworkService.getHousework(params),
     onSuccess: () => {
       console.log("家事情報の取得に成功しました");
     },
@@ -15,9 +15,9 @@ export const useGetHomework = () => {
   });
 };
 
-export const useStartHomework = () => {
+export const useStartHousework = () => {
   return useMutation({
-    mutationFn: (homework: HomeworkStartRequest) => HomeworkService.startHomework(homework),
+    mutationFn: (housework: HouseworkStartRequest) => HouseworkService.startHousework(housework),
     onSuccess: () => {
       console.log("家事の開始に成功しました");
     },
@@ -27,9 +27,9 @@ export const useStartHomework = () => {
   });
 };
 
-export const useEndHomework = () => {
+export const useEndHousework = () => {
   return useMutation ({
-    mutationFn: (params: HomeworkRequest) => HomeworkService.endHomework(params),
+    mutationFn: (params: HouseworkRequest) => HouseworkService.endHousework(params),
     onSuccess: () => {
       console.log("家事の終了に成功しました");
     },

@@ -2,6 +2,7 @@
 
     import { useUserStore } from "@/stores/user-store";
     import { useCreateMealFrequency } from "@/hooks/features/meal-frequency";
+    import { useSetupRoom } from "@/hooks/features/homework";
     import { useEffect, useMemo, useState } from "react";
     import { useParams, useRouter } from "next/navigation";
     import { ChevronLeft } from "lucide-react";
@@ -11,6 +12,7 @@
     import { ButtonWithToNext } from "@/components/features/onboarding/button-with-to-next";
 
     import { STEPS } from "@/data/onboarding-steps";
+    import { toRoomData } from "@/lib/utils/to-room-data";
 
     function readAnswers(): Record<string, string> {
     if (typeof window === "undefined") return {};
@@ -29,7 +31,8 @@
 
     export default function OnboardingStepPage() {
     const { setMealFrequency } = useUserStore();
-    const { mutate } = useCreateMealFrequency();
+    const { mutate: createMealFrequency } = useCreateMealFrequency();
+    const { mutate: setupRoom } = useSetupRoom();
 
     const router = useRouter();
     const params = useParams<{ step: string }>();
@@ -66,13 +69,24 @@
     const goNext = () => {
         if (!selected) return;
 
-        if (isFirst) handleSubmit();
+        if (isFirst) handleMealFrequencySubmit();
 
         // ✅ 保存（9問の答えとして使えるように）
         const saved = readAnswers();
         writeAnswers({ ...saved, [step.id]: String(selected) });
 
+        const numericAnswers = Object.entries(saved).reduce<Record<string, number>>((acc, [key, value]) => {
+            const numValue = Number(value);
+            if (Number.isFinite(numValue)) {
+                acc[key] = numValue;
+            }
+            return acc;
+        }, {});
+        
+        const roomData = toRoomData(numericAnswers);
+
         if (isLast) {
+            handleAnswersSubmit(roomData);
             router.push("/");
             return;
         }
@@ -80,11 +94,15 @@
         router.push(`/onboarding/${stepIndex + 2}`);
     };
 
-    const handleSubmit = () => {
+    const handleMealFrequencySubmit = () => {
         if (selected === null) return;
-        mutate({
+        createMealFrequency({
             meal_frequency: selected, // TODO: バックエンド側でcamelCaseを受け入れるように
         });
+    }
+
+    const handleAnswersSubmit = (roomData: { homeworkId: number; doneAt: number }[]) => {
+        setupRoom(roomData);
     }
 
     useEffect(() => {

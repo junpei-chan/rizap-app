@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('housework_logs', function (Blueprint $table) {
             $table->id();
             $table->timestamp('done_at')->nullable(); //完了日
+            $table->integer('calorie')->default(0); //消費カロリー
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); //FK
             $table->foreignId('housework_id')->constrained()->cascadeOnDelete(); //FK
             $table->timestamps();

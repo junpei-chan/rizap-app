@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\HomeworkController;
+use App\Http\Controllers\CalendarController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -22,11 +23,16 @@ Route::prefix('auth')->group(function () {
         Route::patch('meal_frequency/edit', [ProfileController::class, 'edit']);
     });
 
-    Route::patch('/room', [RoomController::class, 'store']);
+    Route::post('/room', [RoomController::class, 'store']);
 
     Route::prefix('housework')->group(function () {
         Route::get('/', [HomeworkController::class, 'index']);
         Route::patch('start', [HomeworkController::class, 'store']);
         Route::patch('end', [HomeworkController::class, 'update']);
+    });
+
+    Route::prefix('calendar')->group(function () {
+        Route::get('/', [CalendarController::class, 'index']);
+        Route::get('date', [CalendarController::class, 'one']);
     });
 // });

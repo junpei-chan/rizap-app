@@ -3,10 +3,13 @@ import type { RoomRequest, HouseworkRequest, HouseworkResponse, HouseworkStartRe
 import type { ApiResponse } from "@/types/api.types";
 
 export const HouseworkService = {
-  setupRoom: async (params?: RoomRequest) => {
-    const { data } = await authClient.post<ApiResponse>("/room",
-      params,
-    );
+  setupRoom: async (params?: RoomRequest | RoomRequest[]) => {
+    const raw = Array.isArray(params) ? params : params ? [params] : [];
+    const payload = raw.map((p) => ({
+      housework_id: p.houseworkId,
+      done_at: p.doneAt,
+    }));
+    const { data } = await authClient.post<ApiResponse>("/room", payload);
     return data;
   },
   getHousework: async (params?: HouseworkRequest) => {

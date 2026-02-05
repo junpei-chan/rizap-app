@@ -23,12 +23,13 @@ export default function Login() {
   return (
     <main>
       <div className="text-center text-2xl mt-44 mb-12">
-        {/* <Image 
-          src="/logo.png"
+        <Image 
+          src="/images/logo.png"
           alt="logo"
           width={72}
           height={72}
-        /> */}
+          className="mx-auto mb-10"
+        />
         <h1>
           ようこそ
         </h1>

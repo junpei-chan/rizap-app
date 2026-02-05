@@ -1,7 +1,8 @@
 echo "[entrypoint] Running composer dump-autoload --optimize"
 echo "[entrypoint] Running php artisan package:discover"
 #!/bin/sh
-set -e
+# デバッグモード: 実行コマンドを出力
+set -x
 
 echo "[entrypoint] Environment:"
 env
@@ -19,12 +20,32 @@ php artisan package:discover --ansi || echo "[entrypoint] package:discover faile
 # echo "[entrypoint] Running migrations"
 # php artisan migrate --force || echo "[entrypoint] migrate failed"
 
-echo "[entrypoint] Trying to start using 'php artisan serve' on 0.0.0.0:${PORT}"
-if php artisan serve --host=0.0.0.0 --port=${PORT}; then
-	echo "[entrypoint] php artisan serve exited normally"
-	exit 0
+echo "[entrypoint] Attempting to start 'php artisan serve' on 0.0.0.0:${PORT} (background)"
+php artisan serve --host=0.0.0.0 --port=${PORT} &
+ARTISAN_PID=$!
+sleep 2
+if kill -0 "$ARTISAN_PID" 2>/dev/null; then
+	echo "[entrypoint] php artisan serve started (pid=${ARTISAN_PID}), waiting..."
+	wait "$ARTISAN_PID"
+	EXIT_CODE=$?
+	echo "[entrypoint] php artisan serve exited with ${EXIT_CODE}"
+	# そのまま終了して再デプロイ時に再試行されるため、ここでは終了する
+	exit "$EXIT_CODE"
 else
-	echo "[entrypoint] php artisan serve failed, falling back to built-in PHP server"
-	echo "[entrypoint] Starting php -S 0.0.0.0:${PORT} -t public"
-	exec php -S 0.0.0.0:${PORT} -t public
+	echo "[entrypoint] php artisan serve failed to start (pid=${ARTISAN_PID}), trying built-in PHP server"
+	php -S 0.0.0.0:${PORT} -t public &
+	PHP_PID=$!
+	sleep 2
+	if kill -0 "$PHP_PID" 2>/dev/null; then
+		echo "[entrypoint] php -S started (pid=${PHP_PID}), waiting..."
+		wait "$PHP_PID"
+		exit_code=$?
+		echo "[entrypoint] php -S exited with ${exit_code}"
+		exit "$exit_code"
+	else
+		echo "[entrypoint] both servers failed to start. Dumping process list and keeping container alive for debugging."
+		ps aux || true
+		echo "[entrypoint] Tail logs to keep container alive"
+		tail -f /dev/null
+	fi
 fi

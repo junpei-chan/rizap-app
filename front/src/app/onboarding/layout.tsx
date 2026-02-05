@@ -1,6 +1,6 @@
 export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="min-h-screen bg-white flex justify-center">
+        <div className="min-h-screen bg-white flex justify-center bg-[url('/images/bg.png')] bg-center bg-no-repeat">
             {/* Figma想定：幅393px */}
             <div className="w-full max-w-98.25 min-h-screen px-7.5">
                 {children}

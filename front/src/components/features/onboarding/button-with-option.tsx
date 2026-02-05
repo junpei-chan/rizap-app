@@ -30,6 +30,7 @@ export function ButtonWithOption({ label, selected, onClick }: Props) {
                 selected && [
                     "border-[#FF754F]",
                     "font-medium",
+                    "bg-[#F8F8F8]",
                     "text-[#4A4A4A]",
                     "shadow-[0_2px_0_0_rgba(0,0,0,0.18)]",
                     "active:translate-y-px active:shadow-[0_1px_0_0_rgba(0,0,0,0.18)]",

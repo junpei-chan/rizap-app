@@ -148,12 +148,12 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
                   justifyContent: "center",
                 }}
               >
-                <Image
+                {/* <Image
                   src={alertSrc}
                   alt=""
                   width={52}
                   height={52}
-                />
+                /> */}
               </motion.div>
             )}
           </div>

@@ -82,7 +82,7 @@ export default function App() {
   };
 
   return (
-    <main className="w-screen h-screen bg-gray-400">
+    <main className="w-screen h-screen bg-gray-400 bg-[url('/images/bg.png')] bg-center bg-no-repeat">
       <ClickableRoom onItemClick={setSelectedId} selectedId={selectedId} />
 
       <AnimatePresence>

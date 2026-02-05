@@ -13,8 +13,7 @@ class HouseworkController extends Controller
             'housework_id' => 'nullable|exists:houseworks,id',
         ]);
 
-        //$user_id = auth()->id(); 本来はこれ
-        $user_id = 1;
+        $user_id = auth()->id();
 
         $housework_id = $request->input('housework_id');
         // ==============================
@@ -105,8 +104,8 @@ class HouseworkController extends Controller
             'housework_id' => 'required|integer|exists:houseworks,id',
         ]);
 
-        //$user_id = auth()->id(); 本来はこれ
-        $user_id = 1; // 本番は auth()->id()
+        $user_id = auth()->id(); 
+        
 
         // 🔍 その家事がすでに起動中か？
         $alreadyRunning = HouseworkLog::where('user_id', $user_id)
@@ -142,8 +141,7 @@ class HouseworkController extends Controller
             'calorie' => 'required|integer'
         ]);
 
-        //$user_id = auth()->id(); 本来はこれ
-        $user_id = 1;
+        $user_id = auth()->id();
 
         // 🔍 起動中ログ取得
         $log = HouseworkLog::where('user_id', $user_id)

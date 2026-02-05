@@ -14,8 +14,8 @@ class CalendarController extends Controller
             'month' => 'required|integer|min:1|max:12',
         ]);
 
-        //$user_id = auth()->id();
-        $user_id = 1;
+        $user_id = auth()->id();
+    
 
         // 対象月の範囲
         $start = Carbon::create($request->year, $request->month, 1)->startOfMonth();
@@ -55,8 +55,8 @@ class CalendarController extends Controller
             'date' => 'required|date', // 例: 2026-02-04
         ]);
 
-        //$user_id = auth()->id();
-        $user_id = 1;
+        $user_id = auth()->id();
+        
 
         // 対象日の開始・終了
         $start = Carbon::parse($request->date)->startOfDay();

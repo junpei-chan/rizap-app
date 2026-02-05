@@ -41,8 +41,13 @@ class AuthController extends Controller
     public function sign_up(Request $request){
         try {
             $validated = $request->validate([
-                'email' => 'required|email|max:255|unique:users,email',//required -> 入力必須　：　email -> メール型か : max:255 -> 255文字以内 : unique:users,email -> 同じ名前はだめ
-                'password' => 'required|string|min:8' //confirmed -> パスワード再入力と値が同じかどうか
+                'email' => 'required|email|max:255|unique:users,email',
+                'password' => 'required|string|min:8'
+            ]);
+
+            $validated = $request->validate([
+                'email' => 'required|email|max:255|unique:users,email',
+                'password' => 'required|string|min:8'
             ]);
 
             $user = User::create([

@@ -6,6 +6,7 @@ import { ROOM_ITEMS } from "@/data/room-items";
 import { motion } from "framer-motion";
 import { useAllHouseworks } from "@/hooks/features/housework/use-all-houseworks";
 import { getHouseworkStatusById } from "@/lib/utils/get-housework-status";
+import { useHouseworkStore } from "@/stores/housework-store";
 import type { HouseworkStatus } from "@/types/housework-base.types";
 
 interface ClickableRoomProps {
@@ -40,6 +41,9 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
     if (!selectedId) return null;
     return ROOM_ITEMS.find(item => item.houseworkId === selectedId);
   }, [selectedId]);
+
+  // 進行中の家事IDを取得（進行中はアラートを非表示にするため）
+  const runningHouseworkId = useHouseworkStore((s) => s.runningHouseworkId);
 
   // ズームとパンの計算
   const transformStyle = useMemo(() => {
@@ -95,10 +99,20 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
       {/* クリック可能な領域とステータスインジケーター */}
       {ROOM_ITEMS.map((item) => {
         const houseworkData = houseworksMap[item.houseworkId];
-        const shouldShowIndicator = houseworkData && (() => {
-          const status = getHouseworkStatusById(houseworkData.doneAt, item.houseworkId);
-          return isHighPriorityStatus(status);
-        })();
+        // 進行中の家事はアラートを表示しない
+        const isRunning = runningHouseworkId !== null && Number(item.houseworkId) === runningHouseworkId;
+
+        const shouldShowIndicator =
+          !isRunning &&
+          houseworkData &&
+          (() => {
+            const status = getHouseworkStatusById(houseworkData.doneAt, item.houseworkId);
+            return isHighPriorityStatus(status);
+          })();
+
+        // 位置に応じて左/右のアラート画像を切り替える
+        const isRightSide = parseFloat(item.position.left) > 50;
+        const alertSrc = isRightSide ? "/images/alert-right.svg" : "/images/alert-left.svg";
 
         return (
           <div key={item.id}>
@@ -134,8 +148,8 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
                   justifyContent: "center",
                 }}
               >
-                <Image 
-                  src="/images/alert-left.svg"
+                <Image
+                  src={alertSrc}
                   alt=""
                   width={52}
                   height={52}

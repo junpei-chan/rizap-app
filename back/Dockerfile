@@ -11,8 +11,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-install pdo_mysql pdo_pgsql pgsql
 
-# まずアプリケーションのソースをコピー
-COPY . .
+# まずアプリケーションのソースをコピー（リポジトリルートをビルドコンテキストにしている場合）
+# back ディレクトリのみをコンテキストからコピーする
+COPY back/ .
 
 # Composer 依存関係をインストール（build 時に vendor を最終イメージに含める）
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader

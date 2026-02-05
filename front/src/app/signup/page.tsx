@@ -90,7 +90,18 @@ export default function Signup() {
           <p>処理中...</p>
         )}
         {isError && (
-          <p>エラーが発生しました {error.message}</p>
+          <div>
+            <p>
+              エラーが発生しました { (error as any)?.response?.data?.message || (error as any)?.message }
+            </p>
+            { (error as any)?.response?.data?.errors && (
+              <ul className="mt-2 text-sm text-red-600">
+                {Object.entries((error as any).response.data.errors).map(([k, v]: any) => (
+                  <li key={k}>{k}: {Array.isArray(v) ? v.join(', ') : String(v)}</li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
       </div>
     </main>

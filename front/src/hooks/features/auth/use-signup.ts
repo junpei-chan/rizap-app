@@ -2,10 +2,14 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/services/auth/auth-service";
-import type { AuthRequest, AuthResponse, AuthError } from "@/types/auth.types";
+import type { AuthRequest, AuthResponse } from "@/types/auth.types";
 import Cookies from "js-cookie";
 import { useAuthStore } from "@/stores";
 import { useRouter } from "next/navigation";
+type AxiosErrorLike = {
+  response?: { data?: any };
+  message?: string;
+};
 
 export const useSignup = () => {
   const router = useRouter();
@@ -24,8 +28,15 @@ export const useSignup = () => {
 
       router.push("/"); // トップページにリダイレクト
     },
-    onError: (error: AuthError) => {
-      console.error("サインアップに失敗しました: ", error.message); // エラー処理
+    onError: (error: unknown) => {
+      // Axios のエラーからサーバーのレスポンスを取り出してログ出力する
+      const axiosError = error as AxiosErrorLike;
+      const respData = axiosError.response?.data;
+      if (respData) {
+        console.error("サインアップに失敗しました: ", respData);
+      } else {
+        console.error("サインアップに失敗しました: ", axiosError.message ?? error);
+      }
     }
   });
 };

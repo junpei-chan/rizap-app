@@ -28,6 +28,11 @@ RUN mkdir -p /back && \
 # Composer 依存関係をインストール（build 時に vendor を最終イメージに含める）
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-progress --no-suggest --no-scripts
 
-# 実行コマンド: 起動時にオートローダ最適化・パッケージ検出を行う（ビルド時のスクリプトを回避）
-CMD ["sh", "-c", "composer dump-autoload --optimize && php -r \"exit(0);\" && php artisan package:discover --ansi || true && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# エントリポイントをコピーして実行
+COPY docker-entrypoint.sh /back/docker-entrypoint.sh
+RUN chmod +x /back/docker-entrypoint.sh
+ENTRYPOINT ["/back/docker-entrypoint.sh"]
+
+# デフォルトのコマンド（ENTRYPOINT 内で exec するため通常は不要だが明示）
+CMD [""]
 EXPOSE 8000

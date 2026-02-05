@@ -26,8 +26,8 @@ RUN mkdir -p /back && \
         rm -rf /tmp/context
 
 # Composer 依存関係をインストール（build 時に vendor を最終イメージに含める）
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-progress --no-suggest
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-progress --no-suggest --no-scripts
 
-# 実行コマンド
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# 実行コマンド: 起動時にオートローダ最適化・パッケージ検出を行う（ビルド時のスクリプトを回避）
+CMD ["sh", "-c", "composer dump-autoload --optimize && php artisan package:discover --ansi && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
 EXPOSE 8000

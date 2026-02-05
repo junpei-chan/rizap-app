@@ -26,7 +26,7 @@ export const useSignup = () => {
       // 前のユーザーのキャッシュをすべてクリア
       queryClient.clear();
 
-      router.push("/"); // トップページにリダイレクト
+      router.push("/onboarding"); // トップページにリダイレクト
     },
     onError: (error: unknown) => {
       // Axios のエラーからサーバーのレスポンスを取り出してログ出力する

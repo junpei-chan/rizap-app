@@ -7,11 +7,11 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_PROCESS_TIMEOUT=2000
 ENV COMPOSER_MEMORY_LIMIT=-1
 
-# システムパッケージのインストール
+# システムパッケージのインストール + OPcache有効化
 RUN apt-get update && \
     apt-get install -y zip unzip git libpq-dev && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-install pdo_mysql pdo_pgsql pgsql
+    docker-php-ext-install pdo_mysql pdo_pgsql pgsql opcache
 
 # コンテキストがルートか `back` のどちらでも動作するように、
 # まず全コンテキストを /tmp/context にコピーし、存在するパスを /back に移す

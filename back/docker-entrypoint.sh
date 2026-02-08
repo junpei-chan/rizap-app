@@ -4,12 +4,9 @@
 PORT="${PORT:-8000}"
 
 echo "[entrypoint] PORT=${PORT}"
-echo "[entrypoint] Starting PHP server immediately on 0.0.0.0:${PORT}..."
+echo "[entrypoint] Starting PHP server on 0.0.0.0:${PORT} with router.php..."
 
-# PHPの組み込みサーバーをフォアグラウンドで実行
-# - メモリ制限なし（-1）
-# - 実行時間制限: 300秒
-# - OPcache有効化
+# PHPの組み込みサーバーをフォアグラウンドで実行（router.phpを使用）
 exec php \
     -d memory_limit=-1 \
     -d max_execution_time=300 \
@@ -18,4 +15,4 @@ exec php \
     -d opcache.memory_consumption=64 \
     -d opcache.max_accelerated_files=4000 \
     -d opcache.validate_timestamps=0 \
-    -S 0.0.0.0:${PORT} -t public
+    -S 0.0.0.0:${PORT} -t public public/router.php

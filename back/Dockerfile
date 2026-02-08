@@ -28,11 +28,12 @@ RUN mkdir -p /back && \
 # Composer 依存関係をインストール（build 時に vendor を最終イメージに含める）
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-progress --no-suggest --no-scripts
 
-# エントリポイントをコピーして実行
+# ポートの公開（Renderでは無視されることが多いですが、ドキュメントとして重要）
+EXPOSE 8000
+
+# entrypointのコピー
 COPY docker-entrypoint.sh /back/docker-entrypoint.sh
 RUN chmod +x /back/docker-entrypoint.sh
-ENTRYPOINT ["/back/docker-entrypoint.sh"]
 
-# デフォルトのコマンド（ENTRYPOINT 内で exec するため通常は不要だが明示）
-CMD [""]
-EXPOSE 8000
+# CMD を空にするのではなく、entrypoint を実行するように設定
+ENTRYPOINT ["/back/docker-entrypoint.sh"]

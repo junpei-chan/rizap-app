@@ -17,5 +17,5 @@ php artisan route:cache || echo "[entrypoint] Route cache failed"
 
 echo "[entrypoint] Starting PHP server on 0.0.0.0:${PORT}..."
 
-# PHPの組み込みサーバーをフォアグラウンドで実行
-exec php -S 0.0.0.0:${PORT} -t public
+# PHPの組み込みサーバーをフォアグラウンドで実行（メモリ制限を256MBに）
+exec php -d memory_limit=256M -S 0.0.0.0:${PORT} -t public

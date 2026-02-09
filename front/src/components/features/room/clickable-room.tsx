@@ -6,27 +6,13 @@ import { ROOM_ITEMS } from "@/data/room-items";
 import { motion } from "framer-motion";
 import { useAllHouseworks } from "@/hooks/features/housework/use-all-houseworks";
 import { getHouseworkStatusById } from "@/lib/utils/get-housework-status";
+import { getDirtinessLevel } from "@/lib/utils/get-dirtiness-level";
 import { useHouseworkStore } from "@/stores/housework-store";
-import type { HouseworkStatus } from "@/types/housework-base.types";
 
 interface ClickableRoomProps {
   onItemClick: (houseworkId: string) => void;
   selectedId: string | null;
 }
-
-/**
- * 家事の状態が「かなり溜まっている」以上かどうかを判定
- */
-const isHighPriorityStatus = (status: HouseworkStatus): boolean => {
-  const highPriorityStatuses = [
-    "かなり溜まっている",
-    "限界です",
-    "汚れている",
-    "いっぱい",
-    "たまっている",
-  ];
-  return highPriorityStatuses.includes(status);
-};
 
 /**
  * クリック可能な部屋コンポーネント
@@ -42,7 +28,7 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
     return ROOM_ITEMS.find(item => item.houseworkId === selectedId);
   }, [selectedId]);
 
-  // 進行中の家事IDを取得（進行中はアラートを非表示にするため）
+  // 進行中の家事IDを取得（進行中はオーバーレイを非表示にするため）
   const runningHouseworkId = useHouseworkStore((s) => s.runningHouseworkId);
 
   // ズームとパンの計算
@@ -76,7 +62,7 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
   }, [selectedItem]);
 
   return (
-    <motion.div 
+    <motion.div
       className="fixed top-7 right-1/2 translate-x-1/2 w-93 h-111 z-0"
       animate={{
         scale: transformStyle.scale,
@@ -96,26 +82,39 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
         priority
       />
 
-      {/* クリック可能な領域とステータスインジケーター */}
+      {/* クリック可能な領域と汚れオーバーレイ */}
       {ROOM_ITEMS.map((item) => {
         const houseworkData = houseworksMap[item.houseworkId];
-        // 進行中の家事はアラートを表示しない
         const isRunning = runningHouseworkId !== null && Number(item.houseworkId) === runningHouseworkId;
 
-        const shouldShowIndicator =
-          !isRunning &&
-          houseworkData &&
-          (() => {
-            const status = getHouseworkStatusById(houseworkData.doneAt, item.houseworkId);
-            return isHighPriorityStatus(status);
-          })();
+        const dirtiness = !isRunning && houseworkData
+          ? getDirtinessLevel(getHouseworkStatusById(houseworkData.doneAt, item.houseworkId))
+          : null;
 
-        // 位置に応じて左/右のアラート画像を切り替える
-        const isRightSide = parseFloat(item.position.left) > 50;
-        const alertSrc = isRightSide ? "/images/alert-right.svg" : "/images/alert-left.svg";
+        const showOverlay = dirtiness && dirtiness.level >= 2;
 
         return (
           <div key={item.id}>
+            {/* 汚れオーバーレイ（レベル2以上で表示） */}
+            {showOverlay && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute z-50 pointer-events-none rounded-lg"
+                style={{
+                  top: item.position.top,
+                  left: item.position.left,
+                  width: item.position.width,
+                  height: item.position.height,
+                  backdropFilter: `blur(${dirtiness.blur}px)`,
+                  WebkitBackdropFilter: `blur(${dirtiness.blur}px)`,
+                  backgroundColor: `${dirtiness.color}${Math.round(dirtiness.opacity * 255).toString(16).padStart(2, "0")}`,
+                }}
+              />
+            )}
+
             {/* クリック可能な領域 */}
             <motion.button
               className="absolute cursor-pointer z-60"
@@ -129,33 +128,6 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
               onClick={() => onItemClick(item.houseworkId)}
               aria-label={`${item.name}を選択`}
             />
-
-            {/* ステータスインジケーター画像 */}
-            {shouldShowIndicator && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{ duration: 0.3 }}
-                className="absolute z-50 pointer-events-none"
-                style={{
-                  top: item.position.top,
-                  left: item.position.left,
-                  width: item.position.width,
-                  height: item.position.height,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {/* <Image
-                  src={alertSrc}
-                  alt=""
-                  width={52}
-                  height={52}
-                /> */}
-              </motion.div>
-            )}
           </div>
         );
       })}

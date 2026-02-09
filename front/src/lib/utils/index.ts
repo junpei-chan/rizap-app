@@ -4,3 +4,5 @@ export { getHouseworkStatus, getHouseworkStatusById } from "./get-housework-stat
 export { formatDateToYMD, formatDateToYMDHMS, getHouseworkDatesFromCalendar } from "./calendar";
 export { formatDoneAtToTime } from "./format-time";
 export { getHouseworkGradient, getHouseworkShadow } from "./get-housework-gradient";
+export { getDirtinessLevel } from "./get-dirtiness-level";
+export type { DirtinessConfig } from "./get-dirtiness-level";

@@ -46,8 +46,7 @@ export default function App() {
   );
 
   const handleDateSelect = (newDate: Date | undefined) => {
-    // undefined（選択解除）の場合は現在の日付を使用
-    const targetDate = newDate ?? date;
+    const targetDate = newDate ?? date; // undefined（選択解除）の場合は現在の日付を使用
     
     setDate(targetDate);
     if (targetDate) {
@@ -83,10 +82,13 @@ export default function App() {
 
   return (
     <main className="w-screen h-screen bg-gray-400 bg-[url('/images/bg.png')] bg-center bg-no-repeat">
-      <ClickableRoom onItemClick={setSelectedId} selectedId={selectedId} />
+      <ClickableRoom 
+        onItemClick={setSelectedId} 
+        selectedId={selectedId} 
+      />
 
-      <AnimatePresence>
-        {selectedId && (
+      {selectedId && (
+        <AnimatePresence>
           <HouseworkDetailOverview
             selectedId={selectedId}
             housework={housework}
@@ -95,8 +97,8 @@ export default function App() {
             onHouseworkEndAction={handleHouseworkEnd}
             onHiddenAction={() => setSelectedId(null)}
           />
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      )}
 
       {isMounted && !isSheetOpen && !selectedId && (
         <div className="absolute bottom-6 right-1/2 translate-x-1/2 w-88 bg-white flex flex-col gap-2 items-center mx-auto px-6 pt-4 rounded-lg shadow-[2px_16px_19px_0px_rgba(0,0,0,0.09)] z-20">
@@ -131,12 +133,12 @@ export default function App() {
         </div>
       )}
 
-      <AnimatePresence>
-        {isSheetOpen && (() => {
-          const sheetIsLoading = isDateLoading || isDateFetching;
+      {isSheetOpen && (() => {
+        const sheetIsLoading = isDateLoading || isDateFetching;
 
-          return (
-            <CalendarSheet 
+        return (
+          <AnimatePresence>
+            <CalendarSheet
               date={calenderDate?.date ?? selectedDateString}
               totalCalorie={calenderDate?.totalCalorie ?? 0}
               logs={calenderDate?.logs?.map((log) => ({
@@ -147,9 +149,9 @@ export default function App() {
               onOpenChange={setIsSheetOpen}
               isLoading={sheetIsLoading}
             />
-          );
-        })()}
-      </AnimatePresence>
+          </AnimatePresence>
+        );
+      })()}
     </main>
   )
 }

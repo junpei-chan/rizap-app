@@ -1,6 +1,6 @@
 import { ChevronLeft, Sparkles } from "lucide-react";
 import { HOMEWORK_ITEMS } from "@/data/homework-items";
-import { calculateTimeDifference, getHouseworkStatusById } from "@/lib/utils/";
+import { calculateTimeDifference, getHouseworkStatusById, getDirtinessLevel } from "@/lib/utils/";
 import { getCaloriesByHouseworkAndLevel } from "@/lib/utils/housework";
 import { HouseworkStatusBadge } from "@/components/features/housework";
 import { IBM_Plex_Sans_JP } from "next/font/google";
@@ -35,6 +35,7 @@ export function HouseworkDetailOverview({
   const label = calculateTimeDifference(housework.doneAt);
   const status = getHouseworkStatusById(housework.doneAt, String(houseworkId));
   const calorie = getCaloriesByHouseworkAndLevel(String(houseworkId), status);
+  const dirtiness = getDirtinessLevel(status);
 
   const handleOverviewClose = () => {
     onHiddenAction();
@@ -65,7 +66,9 @@ export function HouseworkDetailOverview({
       <div
         className="absolute bottom-0 w-full flex flex-col items-center gap-9 pt-35 pb-14"
         style={{
-          background: 'linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, rgba(255, 255, 255, 0) 100%)',
+          background: dirtiness.level >= 2
+            ? `linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, ${dirtiness.color}${Math.round(dirtiness.opacity * 255).toString(16).padStart(2, "0")} 100%)`
+            : 'linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, rgba(255, 255, 255, 0) 100%)',
           pointerEvents: 'auto'
         }}
       >

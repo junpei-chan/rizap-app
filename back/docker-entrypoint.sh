@@ -9,24 +9,30 @@ echo "[entrypoint] PORT=${PORT}"
 echo "[entrypoint] Generating Laravel caches..."
 
 echo "[entrypoint] Running config:cache..."
-if php artisan config:cache; then
+php artisan config:cache 2>&1
+CONFIG_EXIT=$?
+if [ $CONFIG_EXIT -eq 0 ]; then
     echo "[entrypoint] config:cache SUCCESS"
 else
-    echo "[entrypoint] config:cache FAILED with exit code $?"
+    echo "[entrypoint] config:cache FAILED with exit code $CONFIG_EXIT"
 fi
 
 echo "[entrypoint] Running route:cache..."
-if php artisan route:cache; then
+php artisan route:cache 2>&1
+ROUTE_EXIT=$?
+if [ $ROUTE_EXIT -eq 0 ]; then
     echo "[entrypoint] route:cache SUCCESS"
 else
-    echo "[entrypoint] route:cache FAILED with exit code $?"
+    echo "[entrypoint] route:cache FAILED with exit code $ROUTE_EXIT"
 fi
 
 echo "[entrypoint] Running view:cache..."
-if php artisan view:cache; then
+php artisan view:cache 2>&1
+VIEW_EXIT=$?
+if [ $VIEW_EXIT -eq 0 ]; then
     echo "[entrypoint] view:cache SUCCESS"
 else
-    echo "[entrypoint] view:cache FAILED with exit code $?"
+    echo "[entrypoint] view:cache FAILED with exit code $VIEW_EXIT"
 fi
 
 # キャッシュファイルの確認

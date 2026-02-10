@@ -70,7 +70,7 @@ export default function OnboardingStepPage() {
     };
 
     const goNext = () => {
-        if (!selected) return;
+        if (selected === null) return;
 
         if (isFirst) handleMealFrequencySubmit();
 
@@ -160,7 +160,7 @@ export default function OnboardingStepPage() {
         <div className="mt-auto">
             <ButtonWithToNext
             label={isLast ? step.nextLabel ?? "はじめる" : "次へ"}
-            disabled={!selected}
+            disabled={selected === null}
             onClick={goNext}
             />
         </div>

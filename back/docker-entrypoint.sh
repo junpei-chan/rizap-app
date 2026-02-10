@@ -7,12 +7,31 @@ echo "[entrypoint] PORT=${PORT}"
 
 # Laravelキャッシュを生成（これにより毎リクエストのパースを省略）
 echo "[entrypoint] Generating Laravel caches..."
+
 echo "[entrypoint] Running config:cache..."
-php artisan config:cache 2>&1 || true
+if php artisan config:cache; then
+    echo "[entrypoint] config:cache SUCCESS"
+else
+    echo "[entrypoint] config:cache FAILED with exit code $?"
+fi
+
 echo "[entrypoint] Running route:cache..."
-php artisan route:cache 2>&1 || true
+if php artisan route:cache; then
+    echo "[entrypoint] route:cache SUCCESS"
+else
+    echo "[entrypoint] route:cache FAILED with exit code $?"
+fi
+
 echo "[entrypoint] Running view:cache..."
-php artisan view:cache 2>&1 || true
+if php artisan view:cache; then
+    echo "[entrypoint] view:cache SUCCESS"
+else
+    echo "[entrypoint] view:cache FAILED with exit code $?"
+fi
+
+# キャッシュファイルの確認
+echo "[entrypoint] Checking cache files..."
+ls -la bootstrap/cache/ 2>&1 || echo "[entrypoint] bootstrap/cache/ not found"
 
 echo "[entrypoint] Starting PHP server on 0.0.0.0:${PORT} with router.php..."
 

@@ -9,15 +9,73 @@ import { getHouseworkStatusById } from "@/lib/utils/get-housework-status";
 import { getDirtinessLevel } from "@/lib/utils/get-dirtiness-level";
 import { useHouseworkStore } from "@/stores/housework-store";
 
-// 雲の形状バリエーション（SVGパス）
-const CLOUD_PATHS = [
-  // もこもこした雲形状1
-  "M15,60 C5,55 2,40 12,32 C8,20 22,10 35,16 C40,5 58,3 65,14 C72,5 90,12 88,28 C98,32 100,48 90,55 C96,65 85,75 72,70 C65,80 50,82 42,74 C32,82 15,75 18,65 C8,68 5,62 15,60Z",
-  // 横に広がった雲形状2
-  "M12,55 C2,48 4,32 16,26 C18,14 32,6 45,14 C52,2 68,5 72,18 C82,8 96,20 92,34 C100,42 96,58 84,58 C88,70 76,78 62,72 C52,82 38,80 30,70 C20,78 6,68 12,55Z",
-  // 不規則な雲形状3
-  "M22,58 C10,52 5,38 16,28 C14,16 28,6 42,14 C50,2 66,6 74,18 C85,10 98,24 92,38 C100,48 94,62 82,60 C86,72 74,82 58,74 C46,84 30,80 26,68 C14,76 6,66 22,58Z",
-];
+// 煙エフェクト用の円配置パターン（各エリアごとに異なる配置）
+// x, y は領域中心からの相対オフセット（%）、size は領域幅に対する比率
+interface SmokeCircle {
+  x: number; // 中心からのXオフセット (%)
+  y: number; // 中心からのYオフセット (%)
+  size: number; // 領域幅に対するサイズ比率
+}
+
+const SMOKE_CONFIGS: Record<string, SmokeCircle[]> = {
+  bath: [
+    { x: -10, y: -8, size: 0.85 },
+    { x: 15, y: 10, size: 0.8 },
+    { x: -5, y: 15, size: 0.7 },
+    { x: 18, y: -12, size: 0.65 },
+    { x: 5, y: 0, size: 0.9 },
+  ],
+  "washing-machine": [
+    { x: -8, y: -10, size: 0.9 },
+    { x: 12, y: 8, size: 0.8 },
+    { x: 0, y: 14, size: 0.75 },
+    { x: -14, y: 10, size: 0.7 },
+    { x: 10, y: -6, size: 0.8 },
+  ],
+  sink: [
+    { x: 8, y: -8, size: 0.8 },
+    { x: -12, y: 6, size: 0.85 },
+    { x: 10, y: 14, size: 0.7 },
+    { x: -6, y: -14, size: 0.65 },
+    { x: 0, y: 4, size: 0.9 },
+  ],
+  toilet: [
+    { x: -8, y: -6, size: 0.85 },
+    { x: 10, y: 12, size: 0.8 },
+    { x: -14, y: 10, size: 0.7 },
+    { x: 8, y: -10, size: 0.75 },
+    { x: 0, y: 6, size: 0.85 },
+  ],
+  trash: [
+    { x: 0, y: -10, size: 0.8 },
+    { x: -10, y: 8, size: 0.85 },
+    { x: 14, y: -4, size: 0.7 },
+    { x: -6, y: 14, size: 0.75 },
+    { x: 8, y: 6, size: 0.8 },
+  ],
+  floor: [
+    { x: -12, y: -6, size: 0.8 },
+    { x: 12, y: 8, size: 0.85 },
+    { x: -6, y: 14, size: 0.7 },
+    { x: 15, y: -10, size: 0.65 },
+    { x: 0, y: 0, size: 0.9 },
+  ],
+  desk: [
+    { x: 6, y: -12, size: 0.8 },
+    { x: -10, y: 8, size: 0.85 },
+    { x: 12, y: 10, size: 0.7 },
+    { x: -4, y: -6, size: 0.75 },
+    { x: 10, y: -4, size: 0.85 },
+  ],
+};
+
+// レベルに応じて表示する円の数
+const CIRCLES_BY_LEVEL: Record<number, number> = {
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+};
 
 interface ClickableRoomProps {
   onItemClick: (houseworkId: string) => void;
@@ -106,47 +164,40 @@ export function ClickableRoom({ onItemClick, selectedId }: ClickableRoomProps) {
         return (
           <div key={item.id}>
             {/* 汚れモヤモヤオーバーレイ（レベル2以上で表示） */}
-            {showOverlay && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="absolute z-50 pointer-events-none"
-                style={{
-                  top: item.position.top,
-                  left: item.position.left,
-                  width: item.position.width,
-                  height: item.position.height,
-                }}
-              >
-                <svg
-                  viewBox="-10 -10 120 105"
-                  preserveAspectRatio="none"
-                  className="w-full h-full overflow-visible"
+            {showOverlay && (() => {
+              const circles = SMOKE_CONFIGS[item.id] ?? SMOKE_CONFIGS.floor;
+              const count = CIRCLES_BY_LEVEL[dirtiness.level] ?? 3;
+              return (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute z-50 pointer-events-none overflow-visible"
+                  style={{
+                    top: item.position.top,
+                    left: item.position.left,
+                    width: item.position.width,
+                    height: item.position.height,
+                  }}
                 >
-                  {/* 外側グロー（大きく・薄く） */}
-                  <path
-                    d={CLOUD_PATHS[index % CLOUD_PATHS.length]}
-                    fill={dirtiness.cloudColor}
-                    transform="translate(50,42.5) scale(1.25) translate(-50,-42.5)"
-                    opacity={0.25}
-                  />
-                  {/* 中間グロー */}
-                  <path
-                    d={CLOUD_PATHS[index % CLOUD_PATHS.length]}
-                    fill={dirtiness.cloudColor}
-                    transform="translate(50,42.5) scale(1.12) translate(-50,-42.5)"
-                    opacity={0.5}
-                  />
-                  {/* メインの雲 */}
-                  <path
-                    d={CLOUD_PATHS[index % CLOUD_PATHS.length]}
-                    fill={dirtiness.cloudColor}
-                  />
-                </svg>
-              </motion.div>
-            )}
+                  {circles.slice(0, count).map((circle, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        position: "absolute",
+                        left: `${50 + circle.x - (circle.size * 50)}%`,
+                        top: `${50 + circle.y - (circle.size * 50)}%`,
+                        width: `${circle.size * 100}%`,
+                        height: `${circle.size * 100}%`,
+                        borderRadius: "50%",
+                        background: `radial-gradient(circle, ${dirtiness.cloudColor} 0%, transparent 70%)`,
+                      }}
+                    />
+                  ))}
+                </motion.div>
+              );
+            })()}
 
             {/* クリック可能な領域 */}
             <motion.button

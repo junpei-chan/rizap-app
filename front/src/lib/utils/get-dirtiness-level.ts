@@ -9,10 +9,10 @@ export interface DirtinessConfig {
 }
 
 const LEVEL_1: DirtinessConfig = { level: 1, color: "#66E08B", blur: 0, opacity: 0, cloudColor: "rgba(0,0,0,0)" };
-const LEVEL_2: DirtinessConfig = { level: 2, color: "#108FFF", blur: 3, opacity: 0.15, cloudColor: "rgba(140,130,100,0.4)" };
-const LEVEL_3: DirtinessConfig = { level: 3, color: "#FFC267", blur: 4, opacity: 0.25, cloudColor: "rgba(110,100,75,0.55)" };
-const LEVEL_4: DirtinessConfig = { level: 4, color: "#FF754F", blur: 5, opacity: 0.35, cloudColor: "rgba(80,70,55,0.7)" };
-const LEVEL_5: DirtinessConfig = { level: 5, color: "#FF6453", blur: 6, opacity: 0.45, cloudColor: "rgba(50,45,38,0.82)" };
+const LEVEL_2: DirtinessConfig = { level: 2, color: "#108FFF", blur: 0, opacity: 0.15, cloudColor: "rgba(150,140,120,0.55)" };
+const LEVEL_3: DirtinessConfig = { level: 3, color: "#FFC267", blur: 0, opacity: 0.25, cloudColor: "rgba(130,120,100,0.65)" };
+const LEVEL_4: DirtinessConfig = { level: 4, color: "#FF754F", blur: 0, opacity: 0.35, cloudColor: "rgba(110,100,80,0.78)" };
+const LEVEL_5: DirtinessConfig = { level: 5, color: "#FF6453", blur: 0, opacity: 0.45, cloudColor: "rgba(90,80,60,0.88)" };
 
 const STATUS_TO_LEVEL: Record<HouseworkStatus, DirtinessConfig> = {
   // Normal

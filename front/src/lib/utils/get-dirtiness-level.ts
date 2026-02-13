@@ -17,7 +17,7 @@ const LEVEL_5: DirtinessConfig = { level: 5, color: "#FF6453", blur: 0, opacity:
 const STATUS_TO_LEVEL: Record<HouseworkStatus, DirtinessConfig> = {
   // Normal
   "とても綺麗": LEVEL_1,
-  "綺麗": LEVEL_2,
+  "綺麗": LEVEL_1,
   "少し汚れている": LEVEL_3,
   "汚れている": LEVEL_4,
   // Laundry
